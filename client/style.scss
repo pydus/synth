@@ -11,7 +11,7 @@ html,body {
   background: $circle-color;
  } 
  50% {
-  background: #fff;
+  background: #f0f;
  }
 }
 
@@ -23,5 +23,5 @@ html,body {
   width: $circle-diameter;
   height: $circle-diameter;
   border-radius: 50%;
-  animation: heyo 2s infinite;
+  animation: heyo 2s ease-in-out infinite;
 }
