@@ -1,0 +1,27 @@
+$background-color: #141422;
+$circle-color: #f00;
+$circle-diameter: 200px;
+
+html,body {
+  background: $background-color;
+}
+
+@keyframes heyo {
+ 0%, 100% {
+  background: $circle-color;
+ } 
+ 50% {
+  background: #fff;
+ }
+}
+
+.circle {
+  position: absolute;
+  left: calc(50% - #{$circle-diameter/2});
+  top: calc(50% - #{$circle-diameter/2});
+  background: $circle-color;
+  width: $circle-diameter;
+  height: $circle-diameter;
+  border-radius: 50%;
+  animation: heyo 2s infinite;
+}
