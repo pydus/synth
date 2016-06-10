@@ -1,7 +1,9 @@
-const express = require('express'),
-  app = express(),
-  path = require('path'),
-  generateIndex = require('./generate-index');
+const express       = require('express'),
+      app           = express(),
+      path          = require('path'),
+      generateIndex = require('./generate-index');
+
+generateIndex(path.join(__dirname, ''));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -13,7 +15,5 @@ app.use('/', (req, res) => {
     cdn: app.get('env') === 'development' ? 'http://localhost:8080/' : '/'
   });
 });
-
-generateIndex();
 
 module.exports = app;

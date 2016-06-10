@@ -1,4 +1,23 @@
 extends layout
 
 block content
-  .circle
+  mixin octave
+    .octave
+      .white
+      .black
+      .white
+      .black
+      .white
+      .white
+      .black
+      .white
+      .black
+      .white
+      .black
+      .white
+
+  .synth
+    .panel
+    .octaves
+      +octave
+      +octave

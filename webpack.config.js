@@ -15,10 +15,10 @@ module.exports = {
         presets: ['es2015']
       }
     }, {
-      test: /\.scss$/,
+      test: /\.(sass|scss)$/,
       loaders: ['style', 'css', 'sass']
-    }]
-  },
+    }
+  ]},
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
       compress: {
@@ -28,5 +28,5 @@ module.exports = {
           comments: false
       }
     })
-  ] 
+  ]
 };

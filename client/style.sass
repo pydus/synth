@@ -1,0 +1,57 @@
+$synth-color: #d24
+$synth-width: 1000px
+$synth-height: 400px
+
+$panel-color: #d46
+$panel-height: $synth-height / 2 - 2px
+$panel-width: $synth-width
+
+$white-color: #eef
+$white-width: 42px
+$white-height: 200px
+
+$black-color: #141422
+$black-width: 0.5 * $white-width
+$black-height: 0.75 * $white-height
+
+html,body
+  background-color: #141422
+  margin: 0
+  padding: 0
+
+.synth
+  background-color: $synth-color
+  width: $synth-width
+  height: $synth-height
+  margin: 10% auto 0 auto
+  border-radius: 8px
+  overflow: hidden
+
+  .panel
+    background-color: $panel-color
+    height: $panel-height
+    width: $panel-width
+
+  .octaves
+    position: relative
+    left: 160px
+    margin-bottom: 0
+    overflow: hidden
+    .octave
+      display: inline-block
+      .white
+        display: inline-block
+        margin: 0 1px
+        border-radius: 2px
+        background-color: $white-color
+        width: $white-width
+        height: $white-height
+      .black
+        display: inline-block
+        position: relative
+        vertical-align: top
+        border-radius: 2px
+        margin: 0 -$black-width/2
+        background-color: $black-color
+        width: $black-width
+        height: $black-height
