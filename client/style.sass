@@ -2,51 +2,86 @@ $synth-color: #d24
 $synth-width: 1000px
 $synth-height: 400px
 
+$octaves-margin: 6px
+
 $panel-color: #d46
-$panel-height: $synth-height / 2 - 2px
+$panel-height: 0.5 * $synth-height - 2 * $octaves-margin
 $panel-width: $synth-width
 
-$white-color: #eef
+$knob-size: 35px
+$knob-color: #141422
+
+$white-color: #f4f4f9
 $white-width: 42px
 $white-height: 200px
 
 $black-color: #141422
 $black-width: 0.5 * $white-width
-$black-height: 0.75 * $white-height
+$black-height: 0.7 * $white-height
 
 html,body
   background-color: #141422
   margin: 0
   padding: 0
+  perspective: 400px
+
+@keyframes press
+  from
+    transform: translate3d(0,0,0)
+  to
+    transform: translate3d(0,0,-3px)
 
 .synth
+  @extend .noselect
   background-color: $synth-color
   width: $synth-width
   height: $synth-height
   margin: 10% auto 0 auto
   border-radius: 8px
   overflow: hidden
+  z-index: 0
 
   .panel
     background-color: $panel-color
     height: $panel-height
     width: $panel-width
+    .knob
+      background-color: $knob-color
+      width: $knob-size
+      height: $knob-size
+      border-radius: 50%
+      &:hover
+        background-color: lighten($knob-color, 4)
+      &:active
+        background-color: darken($knob-color, 4)
 
   .octaves
     position: relative
+    top: $octaves-margin
     left: 160px
     margin-bottom: 0
     overflow: hidden
+
     .octave
+      cursor: default
       display: inline-block
+
       .white
+        z-index: 1
         display: inline-block
         margin: 0 1px
         border-radius: 2px
         background-color: $white-color
         width: $white-width
         height: $white-height
+        &:hover
+          background-color: lighten($white-color, 4)
+        &:active
+          background-color: darken($white-color, 4)
+          animation: press 0.08s 0s normal forwards
+
       .black
+        z-index: 2
         display: inline-block
         position: relative
         vertical-align: top
@@ -55,3 +90,14 @@ html,body
         background-color: $black-color
         width: $black-width
         height: $black-height
+        &:hover
+          background-color: lighten($black-color, 4)
+        &:active
+          background-color: darken($black-color, 4)
+          animation: press 0.08s 0s normal forwards
+
+.noselect
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;

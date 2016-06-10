@@ -1,2 +1,2 @@
 require('./thing')();
-require('./style2.sass');
+require('./style.sass');
