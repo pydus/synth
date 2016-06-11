@@ -16,9 +16,29 @@ block content
       .black.key(id=`${1+12*(n-4)}`, class=keys < 11 ? 'hidden' : '')
       .white.key(id=`${2+12*(n-4)}`, class=keys < 12 ? 'hidden' : '') 
 
+  - var lineStyle = 'stroke:#f0f0ff;stroke-width:2;stroke-linecap:round';
+
   .synth
     .panel
-      .knob
+      .oscillator
+        h1 OSC1
+        .quadbutton
+          .button#sine
+            svg(width='50', height='50')
+              path(d="M20 32 Q 25 10, 30 32" stroke="black" style=lineStyle fill='transparent')
+          .button#square
+            svg(width='50', height='50')
+              line(x1='30', y1='20', x2='30', y2='32', style=lineStyle)
+              line(x1='20', y1='20', x2='20', y2='32', style=lineStyle)
+              line(x1='20', y1='20', x2='30', y2='20', style=lineStyle)
+          .button#triangle
+            svg(width='50', height='50')
+              line(x1='20', y1='32', x2='25', y2='20', style=lineStyle)
+              line(x1='25', y1='20', x2='29', y2='32', style=lineStyle)
+          .button#sawtooth
+            svg(width='50', height='50')
+              line(x1='20', y1='32', x2='29', y2='20', style=lineStyle)
+              line(x1='29', y1='20', x2='29', y2='32', style=lineStyle)
       .master
         h1 Master
         .slider
