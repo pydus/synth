@@ -1,20 +1,20 @@
 extends layout
 
 block content
-  mixin octave(n)
+  mixin octave(n, keys)
     .octave
-      .white.key(id=`${-9+12*(n-4)}`)
-      .black.key(id=`${-8+12*(n-4)}`)
-      .white.key(id=`${-7+12*(n-4)}`)
-      .black.key(id=`${-6+12*(n-4)}`)
-      .white.key(id=`${-5+12*(n-4)}`)
-      .white.key(id=`${-4+12*(n-4)}`)
-      .black.key(id=`${-3+12*(n-4)}`)
-      .white.key(id=`${-2+12*(n-4)}`)
-      .black.key(id=`${-1+12*(n-4)}`)
-      .white.key(id=`${0+12*(n-4)}`)
-      .black.key(id=`${1+12*(n-4)}`)
-      .white.key(id=`${2+12*(n-4)}`)
+      .white.key(id=`${-9+12*(n-4)}`, class=keys < 1 ? 'hidden' : '')
+      .black.key(id=`${-8+12*(n-4)}`, class=keys < 2 ? 'hidden' : '')
+      .white.key(id=`${-7+12*(n-4)}`, class=keys < 3 ? 'hidden' : '')
+      .black.key(id=`${-6+12*(n-4)}`, class=keys < 4 ? 'hidden' : '')
+      .white.key(id=`${-5+12*(n-4)}`, class=keys < 5 ? 'hidden' : '')
+      .white.key(id=`${-4+12*(n-4)}`, class=keys < 6 ? 'hidden' : '')
+      .black.key(id=`${-3+12*(n-4)}`, class=keys < 7 ? 'hidden' : '')
+      .white.key(id=`${-2+12*(n-4)}`, class=keys < 8 ? 'hidden' : '')
+      .black.key(id=`${-1+12*(n-4)}`, class=keys < 9 ? 'hidden' : '')
+      .white.key(id=`${0+12*(n-4)}`, class=keys < 10 ? 'hidden' : '')
+      .black.key(id=`${1+12*(n-4)}`, class=keys < 11 ? 'hidden' : '')
+      .white.key(id=`${2+12*(n-4)}`, class=keys < 12 ? 'hidden' : '') 
 
   .synth
     .panel
@@ -25,3 +25,4 @@ block content
     .octaves
       +octave(4)
       +octave(5)
+      +octave(6, 1)

@@ -10,6 +10,8 @@ const getFrequency = semitone => {
   return 440 * Math.pow(a, semitone);
 };
 
+var isPressingKey = false;
+
 oscillator.type = 'sawtooth';
 oscillator.start();
 
@@ -18,12 +20,24 @@ for (var i = 0; i < keys.length; i++) {
         semitone = key.getAttribute('id');
 
   key.addEventListener('mousedown', event => {
+    isPressingKey = true;
     oscillator.frequency.value = getFrequency(semitone);
     oscillator.connect(audioCtx.destination);
   });
 
+  key.addEventListener('mouseover', event => {
+    if (isPressingKey) {
+      oscillator.frequency.value = getFrequency(semitone);
+      oscillator.connect(audioCtx.destination);
+    }
+  });
+
+  key.addEventListener('mouseout', event => {
+    oscillator.disconnect();
+  });
 }
 
 document.addEventListener('mouseup', event => {
+  isPressingKey = false;
   oscillator.disconnect();
 });
