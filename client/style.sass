@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300)
 
-$synth-color: lighten(#4466dd, 20)
+$synth-color: lighten(#4466dd, 18)
+$synth-color-2: $synth-color + #700000 - #036
 $synth-width: 1300px
 $synth-height: 400px
 
@@ -8,7 +9,8 @@ $darken-lighten-amount: 4
 $octaves-margin: 6px
 $key-depth: 3px
 
-$panel-color: lighten(#3244dd, 20)
+$panel-color: lighten(#3244dd, 18)
+$panel-color-2: $panel-color + #700000 - #036
 $panel-height: 0.5 * $synth-height - 2 * $octaves-margin
 $panel-width: $synth-width
 
@@ -16,8 +18,7 @@ $knob-size: 35px
 $knob-color: #141422
 
 $slider-length: 120px
-$slider-width: 20px
-$slider-color: #141422
+$slider-width: 18px
 
 $white-color: #f4f4f9
 $white-width: 38px
@@ -26,6 +27,10 @@ $white-height: 200px
 $black-color: #141422
 $black-width: 0.5 * $white-width
 $black-height: 0.7 * $white-height
+
+$button-color: rgba(255,255,255,0.3)
+$button-hover-color: rgba(255,255,255,0.35)
+$button-active-color: rgba(255,255,255,0.15)
 
 html,body
   font: 12px 'Roboto', sans-serif
@@ -54,7 +59,7 @@ html,body
 
 .synth
   @include noselect
-  background-color: $synth-color
+  background: linear-gradient(to right, $synth-color, $synth-color-2);
   width: $synth-width
   height: $synth-height
   margin: 10% auto 0 auto
@@ -64,20 +69,22 @@ html,body
   z-index: 0
 
   .panel
-    background-color: $panel-color
+    background: linear-gradient(to right, $panel-color, $panel-color-2)
     height: $panel-height
     width: $panel-width
     overflow: hidden
 
+    > div
+      margin: 8px 18px
+
     h1
       text-align: center
       color: #f8f8f8
-      font-size: 14px
+      font-size: 13px
       font-weight: 400
 
     .oscillator
       display: inline-block
-      margin: 20px
       .quadbutton
         overflow: hidden
         border-radius: 4px
@@ -90,11 +97,11 @@ html,body
           height: 50px
           display: block
           float: left
-          background: rgba(255,255,255,0.3)
+          background: $button-color
           &.pressed
-            background: rgba(255,255,255,0.15) !important
+            background: $button-active-color !important
           &:hover
-            background: rgba(255,255,255,0.35)
+            background: $button-hover-color
 
     .knob
       background-color: $knob-color
@@ -109,14 +116,16 @@ html,body
     .slider
       height: $slider-length
       width: $slider-width
-      background-color: $slider-color
+      background-color: $button-color
       border-radius: 2px
+      transition: width 0.06s ease
+      &:hover
+        width: $slider-width + 4px
 
     .master
-      position: relative
-      left: $synth-width - 90px
-      top: 15px
-      width: 80px
+      display: inline-block
+      float: right
+      width: 50px
       height: 0.9 * $panel-height
       border-radius: 2px
       .slider

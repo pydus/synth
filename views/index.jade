@@ -20,6 +20,9 @@ block content
 
   .synth
     .panel
+      .master
+        h1 Master
+        .slider
       .oscillator
         h1 OSC1
         .quadbutton
@@ -39,9 +42,6 @@ block content
             svg(width='50', height='50')
               line(x1='20', y1='32', x2='29', y2='20', style=lineStyle)
               line(x1='29', y1='20', x2='29', y2='32', style=lineStyle)
-      .master
-        h1 Master
-        .slider
     .octaves
       +octave(2)
       +octave(3)
