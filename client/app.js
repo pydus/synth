@@ -1,4 +1,3 @@
-require('./thing')();
 require('./style.sass');
 
 const audioCtx   = new (window.AudioContext || window.webkitAudioContext)(),
