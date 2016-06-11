@@ -1,6 +1,8 @@
 const express       = require('express'),
       app           = express(),
       path          = require('path'),
+      webpackConfig = require('./webpack.config'),
+      host          = webpackConfig.devServer.host,
       generateIndex = require('./generate-index');
 
 generateIndex(path.join(__dirname, ''));
@@ -12,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', (req, res) => {
   res.render('index', {
-    cdn: app.get('env') === 'development' ? 'http://localhost:8080/' : '/'
+    cdn: app.get('env') === 'development' ? `http://${host}:8080/` : '/'
   });
 });
 

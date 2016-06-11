@@ -28,5 +28,8 @@ module.exports = {
           comments: false
       }
     })
-  ]
+  ],
+  devServer: {
+    host: '192.168.1.68'
+  }
 };

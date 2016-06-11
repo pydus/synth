@@ -1,8 +1,11 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300)
+
 $synth-color: #d24
 $synth-width: 1000px
 $synth-height: 400px
 
 $octaves-margin: 6px
+$key-depth: 3px
 
 $panel-color: #d46
 $panel-height: 0.5 * $synth-height - 2 * $octaves-margin
@@ -10,6 +13,10 @@ $panel-width: $synth-width
 
 $knob-size: 35px
 $knob-color: #141422
+
+$slide-length: 120px
+$slide-width: 20px
+$slide-color: #141422
 
 $white-color: #f4f4f9
 $white-width: 42px
@@ -20,6 +27,7 @@ $black-width: 0.5 * $white-width
 $black-height: 0.7 * $white-height
 
 html,body
+  font: 12px 'Roboto', sans-serif
   background-color: #141422
   margin: 0
   padding: 0
@@ -29,7 +37,7 @@ html,body
   from
     transform: translate3d(0,0,0)
   to
-    transform: translate3d(0,0,-3px)
+    transform: translate3d(0,0,-$key-depth)
 
 .synth
   @extend .noselect
@@ -39,12 +47,20 @@ html,body
   margin: 10% auto 0 auto
   border-radius: 8px
   overflow: hidden
+  cursor: default
   z-index: 0
 
   .panel
     background-color: $panel-color
     height: $panel-height
     width: $panel-width
+
+    h1
+      text-align: center
+      color: #f8f8f8
+      font-size: 14px
+      font-weight: 400
+
     .knob
       background-color: $knob-color
       width: $knob-size
@@ -55,6 +71,22 @@ html,body
       &:active
         background-color: darken($knob-color, 4)
 
+    .slide
+      height: $slide-length
+      width: $slide-width
+      background-color: $slide-color
+      border-radius: 2px
+
+    .master
+      position: relative
+      left: $synth-width - 90px
+      top: 15px
+      width: 80px
+      height: 0.9 * $panel-height
+      border-radius: 2px
+      .slide
+        margin: auto
+
   .octaves
     position: relative
     top: $octaves-margin
@@ -63,7 +95,6 @@ html,body
     overflow: hidden
 
     .octave
-      cursor: default
       display: inline-block
 
       .white.key
@@ -97,7 +128,7 @@ html,body
           animation: press 0.08s 0s normal forwards
 
 .noselect
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none

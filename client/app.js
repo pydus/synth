@@ -14,11 +14,16 @@ oscillator.type = 'sawtooth';
 oscillator.start();
 
 for (var i = 0; i < keys.length; i++) {
-  const key = keys[i];
-  key.addEventListener('click', event => {
-    const semitone = key.getAttribute('id');
+  const key      = keys[i],
+        semitone = key.getAttribute('id');
+
+  key.addEventListener('mousedown', event => {
     oscillator.frequency.value = getFrequency(semitone);
     oscillator.connect(audioCtx.destination);
-    setTimeout(() => oscillator.disconnect(), 400);
   });
+
 }
+
+document.addEventListener('mouseup', event => {
+  oscillator.disconnect();
+});
