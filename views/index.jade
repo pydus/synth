@@ -1,24 +1,24 @@
 extends layout
 
 block content
-  mixin octave
+  mixin octave(n)
     .octave
-      .white
-      .black
-      .white
-      .black
-      .white
-      .white
-      .black
-      .white
-      .black
-      .white
-      .black
-      .white
+      .white.key(id=`c${n}`)
+      .black.key(id=`c#${n}`)
+      .white.key(id=`d${n}`)
+      .black.key(id=`d#${n}`)
+      .white.key(id=`e${n}`)
+      .white.key(id=`f${n}`)
+      .black.key(id=`f#${n}`)
+      .white.key(id=`g${n}`)
+      .black.key(id=`g#${n}`)
+      .white.key(id=`a${n}`)
+      .black.key(id=`a#${n}`)
+      .white.key(id=`b${n}`)
 
   .synth
     .panel
       .knob
     .octaves
-      +octave
-      +octave
+      +octave(4)
+      +octave(5)
