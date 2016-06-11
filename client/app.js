@@ -20,12 +20,15 @@ for (var i = 0; i < keys.length; i++) {
 
   key.addEventListener('mousedown', event => {
     isPressingKey = true;
+    key.classList.remove('not-active');
     oscillator.frequency.value = getFrequency(semitone);
     oscillator.connect(audioCtx.destination);
   });
 
   key.addEventListener('mouseover', event => {
     if (isPressingKey) {
+      key.classList.add('pressed');
+      key.classList.remove('not-active');
       oscillator.frequency.value = getFrequency(semitone);
       oscillator.connect(audioCtx.destination);
     }
@@ -33,6 +36,8 @@ for (var i = 0; i < keys.length; i++) {
 
   key.addEventListener('mouseout', event => {
     oscillator.disconnect();
+    key.classList.remove('pressed');
+    key.classList.add('not-active');
   });
 }
 

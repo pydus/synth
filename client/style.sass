@@ -1,9 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300)
 
 $synth-color: #3244dd
-$synth-width: 1000px
+$synth-width: 1300px
 $synth-height: 400px
 
+$darken-lighten-amount: 4
 $octaves-margin: 6px
 $key-depth: 3px
 
@@ -19,7 +20,7 @@ $slider-width: 20px
 $slider-color: #141422
 
 $white-color: #f4f4f9
-$white-width: 42px
+$white-width: 38px
 $white-height: 200px
 
 $black-color: #141422
@@ -76,9 +77,9 @@ html,body
       height: $knob-size
       border-radius: 50%
       &:hover
-        background-color: lighten($knob-color, 4)
+        background-color: lighten($knob-color, $darken-lighten-amount)
       &:active
-        background-color: darken($knob-color, 4)
+        background-color: darken($knob-color, $darken-lighten-amount)
 
     .slider
       height: $slider-length
@@ -118,9 +119,9 @@ html,body
         width: $white-width
         height: $white-height
         &:hover
-          background-color: lighten($white-color, 4)
-        &:active
-          background-color: darken($white-color, 4)
+          background-color: lighten($white-color, $darken-lighten-amount)
+        &:active:not(.not-active), &.pressed
+          background-color: darken($white-color, $darken-lighten-amount)
           @include press
 
       .black.key
@@ -134,7 +135,7 @@ html,body
         width: $black-width
         height: $black-height
         &:hover
-          background-color: lighten($black-color, 4)
-        &:active
-          background-color: darken($black-color, 4)
+          background-color: lighten($black-color, $darken-lighten-amount)
+        &:active:not(.not-active), &.pressed
+          background-color: darken($black-color, $darken-lighten-amount)
           @include press
