@@ -2,7 +2,7 @@ const express       = require('express'),
       app           = express(),
       path          = require('path'),
       webpackConfig = require('./webpack.config'),
-      host          = webpackConfig.devServer.host,
+      host          = webpackConfig.devServer.host || '127.0.0.1',
       generateIndex = require('./generate-index');
 
 generateIndex(path.join(__dirname, ''));
