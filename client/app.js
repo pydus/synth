@@ -1,2 +1,2 @@
-require('./style.sass');
+require('./styles/style.sass');
 require('./synth');

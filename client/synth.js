@@ -1,56 +1,31 @@
-const panel      = require('./panel'),
-      audioCtx   = new (window.AudioContext || window.webkitAudioContext)(),
-      oscillator = audioCtx.createOscillator(),
-      keys       = document.getElementsByClassName('key'),
-      a          = Math.pow(2, 1 / 12);
+const context    = new (window.AudioContext || window.webkitAudioContext)(),
+      panel      = require('./panel/panel'),
+      keys       = require('./keys'),
+      Oscillator = require('./oscillator');
 
-var isPressingKey = false;
+var gainNode = context.createGain();
+var merger = context.createChannelMerger(1);
+var osc1 = new Oscillator(panel.osc1.waveform, panel.osc1.gain, context);
+var osc2 = new Oscillator(panel.osc2.waveform, panel.osc2.gain, context);
 
-const getFrequency = semitone => {
-  return 440 * Math.pow(a, semitone);
-};
+panel.initialize();
+keys.initialize();
 
-const play = semitone => {
-  oscillator.frequency.value = getFrequency(semitone);
-  oscillator.type = panel.waveform;
-  oscillator.connect(audioCtx.destination);
-};
+panel.osc1.quad.watch(value => osc1.setWaveform(value));
+panel.osc2.quad.watch(value => osc2.setWaveform(value));
+panel.ampGain.watch(value => gainNode.gain.value = value);
 
-const initializeKeys = () => {
-  for (var i = 0; i < keys.length; i++) {
-    const key      = keys[i],
-          semitone = key.getAttribute('id');
+keys.start(semitone => {
+  osc1.play(semitone);
+  osc2.play(semitone);
+});
 
-    key.addEventListener('mousedown', event => {
-      isPressingKey = true;
-      play(semitone);
-      key.classList.remove('not-active');
-    });
+keys.stop(() => {
+  osc1.stop();
+  osc2.stop();
+});
 
-    key.addEventListener('mouseover', event => {
-      if (isPressingKey) {
-        play(semitone);
-        key.classList.add('pressed');
-        key.classList.remove('not-active');
-      }
-    });
-
-    key.addEventListener('mouseout', event => {
-      oscillator.disconnect();
-      key.classList.add('not-active');
-      key.classList.remove('pressed');
-    });
-
-    key.addEventListener('mouseup', event => {
-      key.classList.remove('pressed');
-    });
-  }
-
-  document.addEventListener('mouseup', event => {
-    oscillator.disconnect();
-    isPressingKey = false;
-  });
-};
-
-initializeKeys();
-oscillator.start();
+osc1.connect(merger);
+osc2.connect(merger);
+merger.connect(gainNode);
+gainNode.connect(context.destination);

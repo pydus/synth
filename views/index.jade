@@ -1,48 +1,62 @@
 extends layout
 
 block content
+  - function keyClass(note, keys) {
+  -   return keys < note ? 'hidden' : '';
+  - }
+
   mixin octave(n, keys)
     .octave
-      .white.key(id=`${-9+12*(n-4)}`, class=keys < 1 ? 'hidden' : '')
-      .black.key(id=`${-8+12*(n-4)}`, class=keys < 2 ? 'hidden' : '')
-      .white.key(id=`${-7+12*(n-4)}`, class=keys < 3 ? 'hidden' : '')
-      .black.key(id=`${-6+12*(n-4)}`, class=keys < 4 ? 'hidden' : '')
-      .white.key(id=`${-5+12*(n-4)}`, class=keys < 5 ? 'hidden' : '')
-      .white.key(id=`${-4+12*(n-4)}`, class=keys < 6 ? 'hidden' : '')
-      .black.key(id=`${-3+12*(n-4)}`, class=keys < 7 ? 'hidden' : '')
-      .white.key(id=`${-2+12*(n-4)}`, class=keys < 8 ? 'hidden' : '')
-      .black.key(id=`${-1+12*(n-4)}`, class=keys < 9 ? 'hidden' : '')
-      .white.key(id=`${0+12*(n-4)}`, class=keys < 10 ? 'hidden' : '')
-      .black.key(id=`${1+12*(n-4)}`, class=keys < 11 ? 'hidden' : '')
-      .white.key(id=`${2+12*(n-4)}`, class=keys < 12 ? 'hidden' : '') 
+      .white.key(id=`${-9+12*(n-4)}`, class=keyClass(1, keys))
+      .black.key(id=`${-8+12*(n-4)}`, class=keyClass(2, keys))
+      .white.key(id=`${-7+12*(n-4)}`, class=keyClass(3, keys))
+      .black.key(id=`${-6+12*(n-4)}`, class=keyClass(4, keys))
+      .white.key(id=`${-5+12*(n-4)}`, class=keyClass(5, keys))
+      .white.key(id=`${-4+12*(n-4)}`, class=keyClass(6, keys))
+      .black.key(id=`${-3+12*(n-4)}`, class=keyClass(7, keys))
+      .white.key(id=`${-2+12*(n-4)}`, class=keyClass(8, keys))
+      .black.key(id=`${-1+12*(n-4)}`, class=keyClass(9, keys))
+      .white.key(id=`${0+12*(n-4)}`, class=keyClass(10, keys))
+      .black.key(id=`${1+12*(n-4)}`, class=keyClass(11, keys))
+      .white.key(id=`${2+12*(n-4)}`, class=keyClass(12, keys))
 
   - var lineStyle = 'stroke:#f0f0ff;stroke-width:2;stroke-linecap:round';
 
+  mixin quadbutton
+    .quadbutton
+      .button#sine
+        svg(width='50', height='50')
+          path(d="M20 32 Q 25 10, 30 32" stroke="black" style=lineStyle fill='transparent')
+      .button#square
+        svg(width='50', height='50')
+          line(x1='30', y1='20', x2='30', y2='32', style=lineStyle)
+          line(x1='20', y1='20', x2='20', y2='32', style=lineStyle)
+          line(x1='20', y1='20', x2='30', y2='20', style=lineStyle)
+      .button#triangle
+        svg(width='50', height='50')
+          line(x1='20', y1='32', x2='25', y2='20', style=lineStyle)
+          line(x1='25', y1='20', x2='29', y2='32', style=lineStyle)
+      .button#sawtooth
+        svg(width='50', height='50')
+          line(x1='20', y1='32', x2='29', y2='20', style=lineStyle)
+          line(x1='29', y1='20', x2='29', y2='32', style=lineStyle)
+
+  mixin tube
+    .tube
+      .liquid
+
   .synth
     .panel
-      .master
-        h1 Master
-        .slider
-      .oscillator
+      .amp
+        h1 Volume
+        +tube
+      .oscillator#osc1
         h1 OSC1
-        .quadbutton
-          .button#sine
-            svg(width='50', height='50')
-              path(d="M20 32 Q 25 10, 30 32" stroke="black" style=lineStyle fill='transparent')
-          .button#square
-            svg(width='50', height='50')
-              line(x1='30', y1='20', x2='30', y2='32', style=lineStyle)
-              line(x1='20', y1='20', x2='20', y2='32', style=lineStyle)
-              line(x1='20', y1='20', x2='30', y2='20', style=lineStyle)
-          .button#triangle
-            svg(width='50', height='50')
-              line(x1='20', y1='32', x2='25', y2='20', style=lineStyle)
-              line(x1='25', y1='20', x2='29', y2='32', style=lineStyle)
-          .button#sawtooth
-            svg(width='50', height='50')
-              line(x1='20', y1='32', x2='29', y2='20', style=lineStyle)
-              line(x1='29', y1='20', x2='29', y2='32', style=lineStyle)
-    .octaves
+        +quadbutton
+      .oscillator#osc2
+        h1 OSC2
+        +quadbutton
+    .keys
       +octave(2)
       +octave(3)
       +octave(4)

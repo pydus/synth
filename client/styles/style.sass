@@ -6,21 +6,21 @@ $synth-width: 1300px
 $synth-height: 400px
 
 $darken-lighten-amount: 4
-$octaves-margin: 6px
+$keys-margin: 6px
 $key-depth: 3px
 
 $panel-color: lighten(#3244dd, 18)
 $panel-color-2: $panel-color + #700000 - #036
-$panel-height: 0.5 * $synth-height - 2 * $octaves-margin
+$panel-height: 0.5 * $synth-height - 2 * $keys-margin
 $panel-width: $synth-width
 
 $knob-size: 35px
 $knob-color: #141422
 
-$slider-length: 120px
-$slider-width: 18px
+$tube-length: 120px
+$tube-width: 18px
 
-$white-color: #f4f4f9
+$white-color: rgba(244,244,249,0.92)
 $white-width: 38px
 $white-height: 200px
 
@@ -66,7 +66,6 @@ html,body
   border-radius: 8px
   overflow: hidden
   cursor: default
-  z-index: 0
 
   .panel
     background: linear-gradient(to right, $panel-color, $panel-color-2)
@@ -97,6 +96,7 @@ html,body
           height: 50px
           display: block
           float: left
+          transition: background 0.15s ease-out
           background: $button-color
           &.pressed
             background: $button-active-color !important
@@ -113,27 +113,37 @@ html,body
       &:active
         background-color: darken($knob-color, $darken-lighten-amount)
 
-    .slider
-      height: $slider-length
-      width: $slider-width
+    .tube
+      position: relative
+      height: $tube-length
+      width: $tube-width
       background-color: $button-color
       border-radius: 2px
       transition: width 0.06s ease
       &:hover
-        width: $slider-width + 4px
+        width: $tube-width + 4px
+      .liquid
+        position: absolute
+        bottom: 0
+        left: 0
+        right: 0
+        height: 0%
+        background: $button-hover-color
+        border-top: 4px solid $button-hover-color
+        border-radius: 4px
 
-    .master
+    .amp
       display: inline-block
       float: right
       width: 50px
       height: 0.9 * $panel-height
       border-radius: 2px
-      .slider
+      .tube
         margin: auto
 
-  .octaves
+  .keys
     position: relative
-    top: $octaves-margin
+    top: $keys-margin
     left: 130px
     margin-bottom: 0
     overflow: hidden
