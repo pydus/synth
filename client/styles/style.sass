@@ -4,33 +4,7 @@ $synth-color: lighten(#4466dd, 18)
 $synth-color-2: $synth-color + #700000 - #036
 $synth-width: 1300px
 $synth-height: 400px
-
 $darken-lighten-amount: 4
-$keys-margin: 6px
-$key-depth: 3px
-
-$panel-color: lighten(#3244dd, 18)
-$panel-color-2: $panel-color + #700000 - #036
-$panel-height: 0.5 * $synth-height - 2 * $keys-margin
-$panel-width: $synth-width
-
-$knob-size: 35px
-$knob-color: #141422
-
-$tube-length: 120px
-$tube-width: 18px
-
-$white-color: rgba(244,244,249,0.92)
-$white-width: 38px
-$white-height: 200px
-
-$black-color: #141422
-$black-width: 0.5 * $white-width
-$black-height: 0.7 * $white-height
-
-$button-color: rgba(255,255,255,0.3)
-$button-hover-color: rgba(255,255,255,0.35)
-$button-active-color: rgba(255,255,255,0.15)
 
 html,body
   font: 12px 'Roboto', sans-serif
@@ -48,15 +22,6 @@ html,body
   -ms-user-select: none
   user-select: none
 
-@keyframes sink
-  from
-    transform: translate3d(0,0,0)
-  to
-    transform: translate3d(0,0,-$key-depth)
-
-@mixin press
-  animation: sink 0.08s 0s normal forwards
-
 .synth
   @include noselect
   background: linear-gradient(to right, $synth-color, $synth-color-2);
@@ -67,119 +32,4 @@ html,body
   overflow: hidden
   cursor: default
 
-  .panel
-    background: linear-gradient(to right, $panel-color, $panel-color-2)
-    height: $panel-height
-    width: $panel-width
-    overflow: hidden
-
-    > div
-      margin: 8px 18px
-
-    h1
-      text-align: center
-      color: #f8f8f8
-      font-size: 13px
-      font-weight: 400
-
-    .oscillator
-      display: inline-block
-      .quadbutton
-        overflow: hidden
-        border-radius: 4px
-        width: 100px
-        height: 100px
-        display: inline-block
-        color: #eee
-        .button
-          width: 50px
-          height: 50px
-          display: block
-          float: left
-          transition: background 0.15s ease-out
-          background: $button-color
-          &.pressed
-            background: $button-active-color !important
-          &:hover
-            background: $button-hover-color
-
-    .knob
-      background-color: $knob-color
-      width: $knob-size
-      height: $knob-size
-      border-radius: 50%
-      &:hover
-        background-color: lighten($knob-color, $darken-lighten-amount)
-      &:active
-        background-color: darken($knob-color, $darken-lighten-amount)
-
-    .tube
-      position: relative
-      height: $tube-length
-      width: $tube-width
-      background-color: $button-color
-      border-radius: 2px
-      transition: width 0.06s ease
-      &:hover
-        width: $tube-width + 4px
-      .liquid
-        position: absolute
-        bottom: 0
-        left: 0
-        right: 0
-        height: 0%
-        background: $button-hover-color
-        border-top: 4px solid $button-hover-color
-        border-radius: 4px
-
-    .amp
-      display: inline-block
-      float: right
-      width: 50px
-      height: 0.9 * $panel-height
-      border-radius: 2px
-      .tube
-        margin: auto
-
-  .keys
-    position: relative
-    top: $keys-margin
-    left: 130px
-    margin-bottom: 0
-    overflow: hidden
-
-    .octave
-      display: inline-block
-
-      .hidden
-        display: none !important
-
-      .white.key
-        z-index: 1
-        display: inline-block
-        margin: 0 1px
-        border-radius: 2px
-        background-color: $white-color
-        width: $white-width
-        height: $white-height
-        &:hover
-          background-color: lighten($white-color, $darken-lighten-amount)
-        &:active:not(.not-active), &.pressed
-          background-color: darken($white-color, $darken-lighten-amount)
-          @include press
-
-      .black.key
-        z-index: 2
-        display: inline-block
-        position: relative
-        vertical-align: top
-        border-radius: 2px
-        margin: 0 -$black-width/2
-        background-color: $black-color
-        width: $black-width
-        height: $black-height
-        &:hover
-          background-color: lighten($black-color, $darken-lighten-amount)
-        &:active:not(.not-active), &.pressed
-          background-color: darken($black-color, $darken-lighten-amount)
-          @include press
+  @import 'panel', 'keys'

@@ -1,0 +1,92 @@
+$margin-bottom: 6px
+
+$panel-color: lighten(#3244dd, 18)
+$panel-color-2: $panel-color + #700000 - #036
+$panel-height: 0.5 * $synth-height - 2 * $margin-bottom
+$panel-width: $synth-width
+
+$knob-size: 35px
+$knob-color: #141422
+
+$tube-length: 120px
+$tube-width: 18px
+
+$button-color: rgba(255,255,255,0.3)
+$button-hover-color: rgba(255,255,255,0.35)
+$button-active-color: rgba(255,255,255,0.15)
+
+.panel
+  background: linear-gradient(to right, $panel-color, $panel-color-2)
+  height: $panel-height
+  width: $panel-width
+  overflow: hidden
+  margin-bottom: $margin-bottom
+
+  > div
+    margin: 8px 18px
+
+  h1
+    text-align: center
+    color: #f8f8f8
+    font-size: 13px
+    font-weight: 400
+
+  .oscillator
+    display: inline-block
+    .quadbutton
+      overflow: hidden
+      border-radius: 4px
+      width: 100px
+      height: 100px
+      display: inline-block
+      color: #eee
+      .button
+        width: 50px
+        height: 50px
+        display: block
+        float: left
+        transition: background 0.15s ease-out
+        background: $button-color
+        &.pressed
+          background: $button-active-color !important
+        &:hover
+          background: $button-hover-color
+
+  .knob
+    background: $button-color
+    width: $knob-size
+    height: $knob-size
+    border-radius: 50%
+    &:hover
+      background-color: lighten($knob-color, $darken-lighten-amount)
+    &:active
+      background-color: darken($knob-color, $darken-lighten-amount)
+
+  .tube
+    position: relative
+    height: $tube-length
+    width: $tube-width
+    background: $button-color
+    border-radius: 2px
+    transition: width 0.06s ease-in-out
+    &:hover
+      width: $tube-width + 4px
+    .liquid
+      transition: height 0.06s ease-in-out
+      position: absolute
+      bottom: 0
+      left: 0
+      right: 0
+      height: 0%
+      background: $button-hover-color
+      border-top: 4px solid $button-hover-color
+      border-radius: 4px
+
+  .amp
+    display: inline-block
+    float: right
+    width: 50px
+    height: 0.9 * $panel-height
+    border-radius: 2px
+    .tube
+      margin: auto

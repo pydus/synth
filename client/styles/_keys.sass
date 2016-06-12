@@ -1,0 +1,60 @@
+$key-depth: 3px
+
+$white-color: rgba(244,244,249,0.92)
+$white-width: 38px
+$white-height: 200px
+
+$black-color: #141422
+$black-width: 0.5 * $white-width
+$black-height: 0.7 * $white-height
+
+@keyframes sink
+  from
+    transform: translate3d(0,0,0)
+  to
+    transform: translate3d(0,0,-$key-depth)
+
+@mixin press
+  animation: sink 0.08s 0s normal forwards
+
+.keys
+  position: relative
+  left: 130px
+  margin-bottom: 0
+  overflow: hidden
+
+  .octave
+    display: inline-block
+
+    .hidden
+      display: none !important
+
+    .white.key
+      z-index: 1
+      display: inline-block
+      margin: 0 1px
+      border-radius: 2px
+      background-color: $white-color
+      width: $white-width
+      height: $white-height
+      &:hover
+        background-color: lighten($white-color, $darken-lighten-amount)
+      &:active:not(.not-active), &.pressed
+        background-color: darken($white-color, $darken-lighten-amount)
+        @include press
+
+    .black.key
+      z-index: 2
+      display: inline-block
+      position: relative
+      vertical-align: top
+      border-radius: 2px
+      margin: 0 -$black-width/2
+      background-color: $black-color
+      width: $black-width
+      height: $black-height
+      &:hover
+        background-color: lighten($black-color, $darken-lighten-amount)
+      &:active:not(.not-active), &.pressed
+        background-color: darken($black-color, $darken-lighten-amount)
+        @include press
