@@ -12,9 +12,9 @@ var osc1Waveform = new Quad(quads[0], 'sine'),
 
 var ampGain = new Tube(tubes[0], 0.2, 0, 1);
 
-var osc1Detune = new Knob(knobs[0], 0,   0, 1000, true);
+var osc1Detune = new Knob(knobs[0], 0,   0, 1200, true);
 var osc1Gain   = new Knob(knobs[1], 0.5, 0, 1);
-var osc2Detune = new Knob(knobs[2], 0,   0, 1000, true);
+var osc2Detune = new Knob(knobs[2], 0,   0, 1200, true);
 var osc2Gain   = new Knob(knobs[3], 0.5, 0, 1);
 
 const initializeHeadings = () => {

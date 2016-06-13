@@ -3,19 +3,26 @@ const INTERVAL = Math.pow(2, 1 / 12),
 
 class Oscillator {
   constructor(waveform, gain, audioContext) {
+    this.oscillators = [];
+    this.gainNodes = [];
     this.setWaveform(waveform);
     this.gain = gain || 0.3;
     this.detune = 0;
     this.context = audioContext;
-    this.oscillators = [];
   }
 
   setDetune(value) {
     this.detune = value;
+    this.oscillators.forEach(osc => {
+      osc.detune.value = value;
+    });
   }
 
   setGain(value) {
     this.gain = value;
+    this.gainNodes.forEach(gainNode => {
+      gainNode.gain.value = value;
+    });
   }
 
   connect(output) {
@@ -24,6 +31,9 @@ class Oscillator {
 
   setWaveform(waveform) {
     this.waveform = waveform;
+    this.oscillators.forEach(osc => {
+      osc.type = waveform;
+    });
   }
 
   play(semitone) {
@@ -43,6 +53,7 @@ class Oscillator {
     gainNode.connect(this.output);
 
     this.oscillators.push(osc);
+    this.gainNodes.push(gainNode);
   }
 
   stop(semitone) {
