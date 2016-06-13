@@ -5,7 +5,7 @@ $panel-color-2: $panel-color + #700000 - #036
 $panel-height: 0.5 * $synth-height - 2 * $margin-bottom
 $panel-width: $synth-width
 
-$knob-size: 35px
+$knob-size: 26px
 $knob-color: #141422
 
 $tube-length: 120px
@@ -13,7 +13,10 @@ $tube-width: 18px
 
 $button-color: rgba(255,255,255,0.3)
 $button-hover-color: rgba(255,255,255,0.35)
-$button-active-color: rgba(255,255,255,0.15)
+$button-pressed-color: rgba(255,255,255,0.15)
+
+@mixin background-transition
+  transition: background 0.15s ease-out
 
 .panel
   background: linear-gradient(to right, $panel-color, $panel-color-2)
@@ -30,9 +33,26 @@ $button-active-color: rgba(255,255,255,0.15)
     color: #f8f8f8
     font-size: 13px
     font-weight: 400
+    margin: 0
+    padding: 10px 0
+
+  h2
+    height: 0px !important
+    background: none !important
+    text-align: center
+    color: #f8f8f8
+    font-size: 9px
+    font-weight: 400
 
   .oscillator
     display: inline-block
+
+    &.off
+      opacity: 0.34
+
+    h1
+      cursor: pointer
+
     .quadbutton
       overflow: hidden
       border-radius: 4px
@@ -45,25 +65,43 @@ $button-active-color: rgba(255,255,255,0.15)
         height: 50px
         display: block
         float: left
-        transition: background 0.15s ease-out
+        @include background-transition
         background: $button-color
-        &.pressed
-          background: $button-active-color !important
         &:hover
           background: $button-hover-color
+        &.pressed
+          background: $button-pressed-color !important
 
-  .knob
-    background: $button-color
-    width: $knob-size
-    height: $knob-size
-    border-radius: 50%
-    &:hover
-      background-color: lighten($knob-color, $darken-lighten-amount)
-    &:active
-      background-color: darken($knob-color, $darken-lighten-amount)
+  .knobs
+    width: 100px
+    overflow: hidden
+    .knob, h2
+      position: relative
+      display: inline-block
+      margin: 4px 0 0 12px
+      width: $knob-size
+      height: $knob-size
+      border-radius: 50%
+      background: $button-color
+      @include background-transition
+      &:hover
+        background: $button-hover-color
+      &:nth-child(2n-1)
+        margin-right: 14px
 
+      .liquid
+        transition: all 0.1s ease-out
+        position: absolute
+        background: rgba(255,255,255,0.35)
+        width: $knob-size
+        height: $knob-size
+        border-radius: 50%
+        &.negative
+          background: rgba(255,40,200,0.35);
+        
   .tube
     position: relative
+    overflow: hidden
     height: $tube-length
     width: $tube-width
     background: $button-color
@@ -74,13 +112,14 @@ $button-active-color: rgba(255,255,255,0.15)
     .liquid
       transition: height 0.06s ease-in-out
       position: absolute
+      top: 100%
       bottom: 0
       left: 0
       right: 0
-      height: 0%
+      height: 100%
       background: $button-hover-color
-      border-top: 4px solid $button-hover-color
       border-radius: 4px
+      border-top: 4px solid $button-hover-color
 
   .amp
     display: inline-block

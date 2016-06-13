@@ -45,17 +45,30 @@ block content
     .tube
       .liquid
 
+  mixin knob
+    .knob
+      .liquid
+
+  mixin oscillator-knobs
+    .knobs
+      h2 Detune
+      h2 Gain
+      +knob
+      +knob
+
   .synth
     .panel
       .amp
         h1 Volume
         +tube
-      .oscillator#osc1
+      .oscillator
         h1 OSC1
         +quadbutton
-      .oscillator#osc2
+        +oscillator-knobs
+      .oscillator
         h1 OSC2
         +quadbutton
+        +oscillator-knobs
     .keys
       +octave(2)
       +octave(3)

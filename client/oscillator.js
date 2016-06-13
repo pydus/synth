@@ -4,8 +4,17 @@ const INTERVAL  = Math.pow(2, 1 / 12),
 class Oscillator {
   constructor(waveform, gain, audioContext) {
     this.setWaveform(waveform);
-    this.gain = gain;
+    this.gain = gain || 0.3;
+    this.detune = 0;
     this.context = audioContext;
+  }
+
+  setDetune(value) {
+    this.detune = value;
+  }
+
+  setGain(value) {
+    this.gain = value;
   }
 
   connect(output) {
@@ -17,9 +26,12 @@ class Oscillator {
   }
 
   play(semitone) {
+    this.stop();
+
     this.osc = this.context.createOscillator();
     this.osc.type = this.waveform;
     this.osc.frequency.value = Oscillator.getFrequency(semitone);
+    this.osc.detune.value = this.detune;
     this.osc.start();
 
     this.gainNode = this.context.createGain();
