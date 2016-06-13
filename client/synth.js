@@ -6,9 +6,17 @@ const context    = new (window.AudioContext || window.webkitAudioContext)(),
 panel.initialize();
 keys.initialize();
 
-var oscillators = [];
-var merger = context.createChannelMerger(1);
-var gainNode = context.createGain();
+var oscillators = [],
+    merger      = context.createChannelMerger(1),
+    gainNode    = context.createGain(),
+    compressor  = context.createDynamicsCompressor();
+
+compressor.threshold.value = -50;
+compressor.knee.value = 40;
+compressor.ratio.value = 12;
+compressor.reduction.value = -20;
+compressor.attack.value = 0;
+compressor.release.value = 0.25;
 
 gainNode.gain.value = panel.amp.gain.value;
 panel.amp.gain.watch(value => gainNode.gain.value = value);
@@ -29,4 +37,5 @@ keys.onRelease(semitone => oscillators.forEach(osc => osc.stop(semitone)));
 
 oscillators.forEach(osc => osc.connect(merger));
 merger.connect(gainNode);
-gainNode.connect(context.destination);
+gainNode.connect(compressor);
+compressor.connect(context.destination);
