@@ -9,6 +9,13 @@ class Oscillator {
     this.gain = gain || 0.3;
     this.detune = 0;
     this.context = audioContext;
+    this.running = true;
+  }
+
+  setState(state) {
+    this.running = state;
+    if (state) this.unMute();
+    else this.mute();
   }
 
   setDetune(value) {
@@ -49,7 +56,9 @@ class Oscillator {
     var gainNode = this.context.createGain();
     gainNode.gain.value = this.gain;
 
-    osc.connect(gainNode);
+    if (this.running)
+      osc.connect(gainNode);
+
     gainNode.connect(this.output);
 
     this.oscillators.push(osc);
@@ -63,6 +72,18 @@ class Oscillator {
       this.oscillators[i].stop();
       this.oscillators.splice(i, 1);
     }
+  }
+
+  unMute() {
+    this.oscillators.forEach(osc => {
+      this.gainNodes.forEach(gainNode => {
+        osc.connect(gainNode);
+      });
+    });
+  }
+
+  mute() {
+    this.oscillators.forEach(osc => osc.disconnect());
   }
 
   static getFrequency(semitone) {
