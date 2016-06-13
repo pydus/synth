@@ -4,27 +4,33 @@ class OscillatorPanel {
     this.detune = detune;
     this.gain = gain;
     this.running = true;
-    this.stateWatchers = [];
+    this.runningWatchers = [];
   }
 
-  watchState(fn) {
-    this.stateWatchers.push(fn);
+  initialize() {
+    this.waveform.initialize();
+    this.detune.initialize();
+    this.gain.initialize();
   }
 
-  toggleState() {
-    if (this.running)
-      this.turnOff();
-    else this.turnOn();
+  watchRunning(fn) {
+    this.runningWatchers.push(fn);
   }
 
-  turnOn() {
-    this.running = true;
-    this.stateWatchers.forEach(watcher => watcher(true));
+  toggleRunning() {
+    this.setRunning(!this.running);
   }
 
-  turnOff() {
-    this.running = false;
-    this.stateWatchers.forEach(watcher => watcher(false));
+  setRunning(running) {
+    this.running = running;
+    this.runningWatchers.forEach(watcher => watcher(running));
+    this.updateVisuals();
+  }
+
+  updateVisuals() {
+    if (!this.running)
+      this.waveform.element.parentNode.classList.add('off');
+    else this.waveform.element.parentNode.classList.remove('off');
   }
 }
 

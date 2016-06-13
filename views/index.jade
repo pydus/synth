@@ -56,19 +56,21 @@ block content
       +knob
       +knob
 
+  mixin oscillator(name)
+    .oscillator
+      h1= name
+      +quadbutton
+      +oscillator-knobs
+
   .synth
     .panel
       .amp
         h1 Volume
         +tube
-      .oscillator
-        h1 OSC1
-        +quadbutton
-        +oscillator-knobs
-      .oscillator
-        h1 OSC2
-        +quadbutton
-        +oscillator-knobs
+      +oscillator('OSC1')
+      +oscillator('OSC2')
+      +oscillator('OSC3')
+      +oscillator('OSC4')
     .keys
       +octave(2)
       +octave(3)

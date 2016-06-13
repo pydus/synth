@@ -3,36 +3,30 @@ const context    = new (window.AudioContext || window.webkitAudioContext)(),
       keys       = require('./keys'),
       Oscillator = require('./oscillator');
 
-var gainNode = context.createGain();
-var merger = context.createChannelMerger(1);
-
 panel.initialize();
 keys.initialize();
 
-var osc1 = new Oscillator(panel.osc1.waveform.value, panel.osc1.gain.value, context);
-var osc2 = new Oscillator(panel.osc2.waveform.value, panel.osc2.gain.value, context);
+var oscillators = [];
+var merger = context.createChannelMerger(1);
+var gainNode = context.createGain();
 
-panel.osc1.watchState(state => osc1.setState(state));
-panel.osc2.watchState(state => osc2.setState(state));
-panel.osc1.waveform.watch(value => osc1.setWaveform(value));
-panel.osc2.waveform.watch(value => osc2.setWaveform(value));
-panel.osc1.detune.watch(value => osc1.setDetune(value));
-panel.osc2.detune.watch(value => osc2.setDetune(value));
-panel.osc1.gain.watch(value => osc1.setGain(value));
-panel.osc2.gain.watch(value => osc2.setGain(value));
+gainNode.gain.value = panel.amp.gain.value;
 panel.amp.gain.watch(value => gainNode.gain.value = value);
 
-keys.onPress(semitone => {
-  osc1.play(semitone);
-  osc2.play(semitone);
-});
+for (var i = 0; i < panel.nOscillators; i++) {
+  const oscPanel = panel[`osc${i + 1}`],
+        osc      = new Oscillator(oscPanel.waveform.value, oscPanel.gain.value, context);
+  osc.setRunning(oscPanel.running);
+  oscPanel.watchRunning(value => osc.setRunning(value));
+  oscPanel.waveform.watch(value => osc.setWaveform(value));
+  oscPanel.detune.watch(value => osc.setDetune(value));
+  oscPanel.gain.watch(value => osc.setGain(value));
+  oscillators.push(osc);
+}
 
-keys.onRelease(semitone => {
-  osc1.stop(semitone);
-  osc2.stop(semitone);
-});
+keys.onPress(semitone => oscillators.forEach(osc => osc.play(semitone)));
+keys.onRelease(semitone => oscillators.forEach(osc => osc.stop(semitone)));
 
-osc1.connect(merger);
-osc2.connect(merger);
+oscillators.forEach(osc => osc.connect(merger));
 merger.connect(gainNode);
 gainNode.connect(context.destination);
