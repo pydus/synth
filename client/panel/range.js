@@ -1,14 +1,26 @@
 var following;
 
 class Range {
-  constructor(element, value, min, max, negative, distance, clickMode) {
+  /**
+   * Creates an object with a value that can be set within a range, and is controlled by a DOM element.
+   * @param  {Element} element   The DOM element that will control the value.
+   * @param  {Number} value      Initial value.
+   * @param  {Number} min        Value when the DOM visuals are set to zero.
+   * @param  {Number} max        Maximum value.
+   * @param  {Boolean} negative  If true, the range can be controlled past min to negative max.
+   *                             If false, the min parameter controls the minimum value.
+   * @param  {Number} distance   The distance in pixels the mouse pointer has to travel vertically
+   *                             when clicking and dragging in order to go through the whole range.
+   *                             If not set, click and drag is disabled.
+   * @return {undefined}
+   */
+  constructor(element, value, min, max, negative, distance) {
     this.element = element;
     this.min = min || 0;
     this.max = max || 1;
     this.setValue(value || this.min);
     this.negative = negative;
     this.distance = distance;
-    this.clickMode = clickMode;
   }
 
   reset() {
@@ -44,13 +56,13 @@ class Range {
   }
 
   static followEvent(event) {
-    var rect     = following.element.getBoundingClientRect(),
-        distance = following.distance || rect.height,
-        dy       = event.clientY - following.clientY;
+    var rect      = following.element.getBoundingClientRect(),
+        distance  = following.distance || rect.height,
+        dy        = event.clientY - following.clientY;
 
     var ratio;
 
-    if (following.clickMode)
+    if (!following.distance)
       ratio = (rect.top - (event.clientY - rect.height)) / rect.height;
     else ratio = following.startRatio - dy / distance;
 

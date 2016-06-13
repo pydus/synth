@@ -19,14 +19,14 @@ panel.osc1.gain.watch(value => osc1.setGain(value));
 panel.osc2.gain.watch(value => osc2.setGain(value));
 panel.amp.gain.watch(value => gainNode.gain.value = value);
 
-keys.start(semitone => {
+keys.onPress(semitone => {
   osc1.play(semitone);
   osc2.play(semitone);
 });
 
-keys.stop(() => {
-  osc1.stop();
-  osc2.stop();
+keys.onRelease(semitone => {
+  osc1.stop(semitone);
+  osc2.stop(semitone);
 });
 
 osc1.connect(merger);

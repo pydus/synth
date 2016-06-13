@@ -1,8 +1,8 @@
-var Range = require('./range');
+const Range = require('./range');
 
 class Tube extends Range {
-  constructor(element, value, min, max, distance) {
-    super(element, value, min, max, false, distance, true);
+  constructor(element, value, min, max) {
+    super(element, value, min, max, false);
   }
 
   updateVisuals(ratio) {

@@ -1,5 +1,5 @@
-const INTERVAL  = Math.pow(2, 1 / 12),
-      A         = 440;
+const INTERVAL = Math.pow(2, 1 / 12),
+      A        = 440;
 
 class Oscillator {
   constructor(waveform, gain, audioContext) {
@@ -7,6 +7,7 @@ class Oscillator {
     this.gain = gain || 0.3;
     this.detune = 0;
     this.context = audioContext;
+    this.oscillators = [];
   }
 
   setDetune(value) {
@@ -26,25 +27,31 @@ class Oscillator {
   }
 
   play(semitone) {
-    this.stop();
+    this.stop(semitone);
 
-    this.osc = this.context.createOscillator();
-    this.osc.type = this.waveform;
-    this.osc.frequency.value = Oscillator.getFrequency(semitone);
-    this.osc.detune.value = this.detune;
-    this.osc.start();
+    var osc = this.context.createOscillator();
+    osc.type = this.waveform;
+    osc.semitone = semitone;
+    osc.frequency.value = Oscillator.getFrequency(semitone);
+    osc.detune.value = this.detune;
+    osc.start();
 
-    this.gainNode = this.context.createGain();
-    this.gainNode.gain.value = this.gain;
+    var gainNode = this.context.createGain();
+    gainNode.gain.value = this.gain;
 
-    this.osc.connect(this.gainNode);
-    this.gainNode.connect(this.output);
+    osc.connect(gainNode);
+    gainNode.connect(this.output);
+
+    this.oscillators.push(osc);
   }
 
-  stop() {
-    if (!this.osc) return;
-    this.osc.stop();
-    this.osc = null;
+  stop(semitone) {
+    for (var i = 0; i < this.oscillators.length; i++) {
+      if (this.oscillators[i].semitone !== semitone)
+        continue;
+      this.oscillators[i].stop();
+      this.oscillators.splice(i, 1);
+    }
   }
 
   static getFrequency(semitone) {

@@ -1,17 +1,18 @@
-var Range = require('./range');
+const Range = require('./range');
 
-const DISTANCE = 150;
+const DISTANCE = 120;
 
 class Knob extends Range {
   constructor(element, value, min, max, negative) {
-    super(element, value, min, max, negative, DISTANCE, false);
+    super(element, value, min, max, negative, DISTANCE);
   }
 
   updateVisuals(ratio) {
-    this.element.children[0].style.transform = `scale(${ratio}, ${ratio})`;
+    var liquid = this.element.children[0];
+    liquid.style.transform = `scale(${ratio}, ${ratio})`;
     if (ratio < 0)
-      this.element.children[0].classList.add('negative');
-    else this.element.children[0].classList.remove('negative');
+      liquid.classList.add('negative');
+    else liquid.classList.remove('negative');
   }
 }
 

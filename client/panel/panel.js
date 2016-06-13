@@ -1,15 +1,16 @@
-const Quad     = require('./quad'),
-      Tube     = require('./tube'),
-      Knob     = require('./knob'),
-      headings = document.querySelectorAll('.oscillator h1'),
-      quads    = document.getElementsByClassName('quadbutton'),
-      knobs    = document.querySelectorAll('.oscillator .knob'),
-      tubes    = document.getElementsByClassName('tube');
+const Quad = require('./quad'),
+      Tube = require('./tube'),
+      Knob = require('./knob');
+
+var headings = document.querySelectorAll('.oscillator h1'),
+    quads    = document.getElementsByClassName('quadbutton'),
+    knobs    = document.querySelectorAll('.oscillator .knob'),
+    tubes    = document.getElementsByClassName('tube');
 
 var osc1Waveform = new Quad(quads[0], 'sine'),
     osc2Waveform = new Quad(quads[1], 'square');
 
-var ampGain = new Tube(tubes[0], 0.4, 0, 1);
+var ampGain = new Tube(tubes[0], 0.2, 0, 1);
 
 var osc1Detune = new Knob(knobs[0], 0,   0, 1000, true);
 var osc1Gain   = new Knob(knobs[1], 0.5, 0, 1);
