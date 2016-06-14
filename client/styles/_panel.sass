@@ -5,10 +5,11 @@ $panel-color-2: $panel-color + #700000 - #036
 $panel-height: 0.5 * $synth-height - 2 * $margin-bottom
 $panel-width: $synth-width
 
-$knob-size: 26px
+$knob-size: 21px
 $knob-color: #141422
+$osc-knob-spacing: 16px
 
-$tube-length: 120px
+$tube-length: 130px
 $tube-width: 18px
 
 $button-color: rgba(255,255,255,0.3)
@@ -23,11 +24,16 @@ $button-pressed-color: rgba(255,255,255,0.15)
   background: linear-gradient(to right, $panel-color, $panel-color-2)
   height: $panel-height
   width: $panel-width
+  box-sizing: border-box
   overflow: hidden
   margin-bottom: $margin-bottom
+  padding: 0 20px
 
   > div
-    margin: 8px 18px
+    position: relative
+    display: inline-block
+    vertical-align: top
+    margin: 8px 5px
 
   h1
     text-align: center
@@ -68,13 +74,16 @@ $button-pressed-color: rgba(255,255,255,0.15)
       padding: 0
 
   .oscillator
-    display: inline-block
-
     &.off
       opacity: 0.34
 
     h1
       cursor: pointer
+
+    .main
+      display: inline-block
+      width: 100px
+      overflow: hidden
 
     .quadbutton
       overflow: hidden
@@ -95,41 +104,61 @@ $button-pressed-color: rgba(255,255,255,0.15)
         &.pressed
           background: $button-pressed-color !important
 
+    .vertical
+      display: inline-block
+      position: relative
+      top: -4px
+      margin-left: 13px
+      width: 40px
+      h2
+        position: relative
+        right: 3px
+      .knob
+        width: 21px
+        height: 21px
+        margin-top: 2px
+        margin-bottom: 0
+        .liquid
+          width: 21px
+          height: 21px
+
   .knobs
     width: 100px
     overflow: hidden
-    .knob
+
+  .knob
+    cursor: ns-resize
+
+  .knob, h2
+    display: inline-block
+    margin: 4px 4px 0 8px
+    width: $knob-size
+    height: $knob-size
+    border-radius: 50%
+    background: $button-color
+    @include background-transition
+    &:hover
+      background: $button-hover-color
+    &:not(&:nth-child(3n))
+      margin-right: $osc-knob-spacing
+    &:active:not(h2):before
+      content: ''
+      display: block
+      position: absolute
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
       cursor: ns-resize
-    .knob, h2
-      display: inline-block
-      margin: 4px 0 0 12px
+      z-index: 3
+
+    .liquid
+      background: rgba(255,255,255,0.35)
       width: $knob-size
       height: $knob-size
       border-radius: 50%
-      background: $button-color
-      @include background-transition
-      &:hover
-        background: $button-hover-color
-      &:nth-child(2n-1)
-        margin-right: 14px
-      &:active:not(h2):before
-        content: ''
-        display: block
-        position: absolute
-        top: 0
-        left: 0
-        right: 0
-        bottom: 0
-        cursor: ns-resize
-        z-index: 3
-
-      .liquid
-        background: rgba(255,255,255,0.35)
-        width: $knob-size
-        height: $knob-size
-        border-radius: 50%
-        &.negative
-          background: rgba(0,0,0,0.35);
+      &.negative
+        background: rgba(0,0,0,0.35);
         
   .tube
     position: relative
@@ -152,7 +181,7 @@ $button-pressed-color: rgba(255,255,255,0.15)
       border-radius: 4px
       border-top: 4px solid $button-hover-color
 
-  .amp
+  .volume
     display: inline-block
     float: right
     width: 50px
@@ -160,3 +189,8 @@ $button-pressed-color: rgba(255,255,255,0.15)
     border-radius: 2px
     .tube
       margin: auto
+
+  .effects, .amp
+    .knob, h2
+      &:nth-child(2n-1)
+        margin-right: $osc-knob-spacing

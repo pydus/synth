@@ -1,6 +1,6 @@
-var following, hovering = false;
-
-var info = document.querySelector('.panel .info');
+var following,
+    hovering = false,
+    info     = document.querySelector('.panel .info');
 
 class Range {
   /**
@@ -49,7 +49,7 @@ class Range {
     });
 
     this.element.addEventListener('wheel', event => {
-      this.setValue(this.value - this.step * event.deltaY / 100);
+      this.setValue(this.value - this.step * event.deltaY / Math.abs(event.deltaY));
     });
 
     this.element.addEventListener('dblclick', event => {
@@ -82,9 +82,7 @@ class Range {
       text = `${(100 * this.value / this.max).toFixed(2)}%`;
     else text = `${this.value.toFixed(2)} ${this.unit}`;
 
-    info.innerHTML = text;
-    info.style.visibility = 'visible';
-    info.style.opacity = 1;
+    Range.showInfo(text);
   }
 
   updateVisuals(ratio) { }
@@ -95,6 +93,12 @@ class Range {
 
   get ratio() {
     return (this.value - this.min) / (this.max - this.min);
+  }
+
+  static showInfo(text) {
+    info.innerHTML = text;
+    info.style.visibility = 'visible';
+    info.style.opacity = 1;
   }
 
   static hideInfo() {

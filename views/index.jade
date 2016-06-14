@@ -52,20 +52,35 @@ block content
   mixin oscillator-knobs
     .knobs
       h2 Detune
+      h2 Cutoff
       h2 Gain
       +knob
+      +knob
+      +knob
+
+  mixin vertical
+    .vertical
+      h2 Attack
+      +knob
+      h2 Decay
+      +knob
+      h2 Sustain
+      +knob
+      h2 Release
       +knob
 
   mixin oscillator(name)
     .oscillator
-      h1= name
-      +quadbutton
-      +oscillator-knobs
+      .main
+        h1= name
+        +quadbutton
+        +oscillator-knobs
+      +vertical
 
   .wrapper
     .synth
       .panel
-        .amp
+        .volume
           h1 Volume
           +tube
         +oscillator('OSC1')
@@ -74,6 +89,31 @@ block content
         +oscillator('OSC4')
         +oscillator('OSC5')
         +oscillator('OSC6')
+        .effects
+          h1 Effects
+          .knobs
+            h2 Delay
+            h2 Time
+            +knob
+            +knob
+            h2 Reverb
+            h2 Decay
+            +knob
+            +knob
+            h2 Size
+            h2 
+            +knob
+        .amp
+          h1 Amp
+          .knobs
+            h2 Attack
+            h2 Decay
+            +knob
+            +knob
+            h2 Sustain
+            h2 Release
+            +knob
+            +knob
         .info
           h1 124 cents
       .keys

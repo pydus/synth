@@ -1,6 +1,7 @@
 const context    = new (window.AudioContext || window.webkitAudioContext)(),
       panel      = require('./panel/panel'),
       keys       = require('./keys'),
+      Envelope   = require('./envelope'),
       Oscillator = require('./oscillator');
 
 panel.initialize();
@@ -22,13 +23,34 @@ gainNode.gain.value = panel.amp.gain.value;
 panel.amp.gain.watch(value => gainNode.gain.value = value);
 
 for (var i = 0; i < panel.nOscillators; i++) {
-  const oscPanel = panel[`osc${i + 1}`],
-        osc      = new Oscillator(oscPanel.waveform.value, oscPanel.gain.value, context);
-  osc.setRunning(oscPanel.running);
-  oscPanel.watchRunning(value => osc.setRunning(value));
-  oscPanel.waveform.watch(value => osc.setWaveform(value));
-  oscPanel.detune.watch(value => osc.setDetune(value));
-  oscPanel.gain.watch(value => osc.setGain(value));
+  const oscUnit  = panel[`osc${i + 1}`];
+
+  const envelope = new Envelope(
+    oscUnit.envelope.attack,
+    oscUnit.envelope.decay,
+    oscUnit.envelope.sustain,
+    oscUnit.envelope.release
+  );
+
+  const osc = new Oscillator(
+    oscUnit.waveform.value,
+    oscUnit.cutoff.value,
+    oscUnit.gain.value,
+    envelope,
+    context
+  );
+
+  envelope.attack.watch(value => envelope.attack = value);
+  envelope.decay.watch(value => envelope.decay = value);
+  envelope.sustain.watch(value => envelope.sustain = value);
+  envelope.release.watch(value => envelope.release = value);
+
+  osc.running = oscUnit.running;
+  oscUnit.watchRunning(value => osc.running = value);
+  oscUnit.waveform.watch(value => osc.waveform = value);
+  oscUnit.detune.watch(value => osc.detune = value);
+  oscUnit.cutoff.watch(value => osc.cutoff = value);
+  oscUnit.gain.watch(value => osc.gain = value);
   oscillators.push(osc);
 }
 
