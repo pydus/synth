@@ -62,18 +62,23 @@ block content
       +quadbutton
       +oscillator-knobs
 
-  .synth
-    .panel
-      .amp
-        h1 Volume
-        +tube
-      +oscillator('OSC1')
-      +oscillator('OSC2')
-      +oscillator('OSC3')
-      +oscillator('OSC4')
-    .keys
-      +octave(2)
-      +octave(3)
-      +octave(4)
-      +octave(5)
-      +octave(6, 1)
+  .wrapper
+    .synth
+      .panel
+        .amp
+          h1 Volume
+          +tube
+        +oscillator('OSC1')
+        +oscillator('OSC2')
+        +oscillator('OSC3')
+        +oscillator('OSC4')
+        +oscillator('OSC5')
+        +oscillator('OSC6')
+        .info
+          h1 124 cents
+      .keys
+        +octave(2)
+        +octave(3)
+        +octave(4)
+        +octave(5)
+        +octave(6, 1)

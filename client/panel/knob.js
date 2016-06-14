@@ -1,10 +1,10 @@
 const Range = require('./range');
 
-const DISTANCE = 120;
+const DISTANCE = 200;
 
 class Knob extends Range {
-  constructor(element, value, min, max, negative) {
-    super(element, value, min, max, negative, DISTANCE);
+  constructor(element, value, unit, min, max, negative) {
+    super(element, value, unit, min, max, negative, DISTANCE);
   }
 
   updateVisuals(ratio) {

@@ -19,6 +19,7 @@ $button-pressed-color: rgba(255,255,255,0.15)
   transition: background 0.15s ease-out
 
 .panel
+  position: relative
   background: linear-gradient(to right, $panel-color, $panel-color-2)
   height: $panel-height
   width: $panel-width
@@ -43,6 +44,28 @@ $button-pressed-color: rgba(255,255,255,0.15)
     color: #f8f8f8
     font-size: 9px
     font-weight: 400
+
+  .info
+    visibility: hidden
+    opacity: 0
+    transition: visibility 0.1s, opacity 0.1s ease-out
+    position: absolute
+    top: 20px
+    right: 0
+    bottom: 0
+    left: 0
+    padding: 40px
+    margin: auto
+    background: rgba(255,255,255,0.88)
+    text-align: center
+    width: 150px
+    height: 13px
+    overflow: hidden
+    border-radius: 5px
+    h1
+      color: #444
+      font-size: 15px
+      padding: 0
 
   .oscillator
     display: inline-block
@@ -89,7 +112,7 @@ $button-pressed-color: rgba(255,255,255,0.15)
         background: $button-hover-color
       &:nth-child(2n-1)
         margin-right: 14px
-      &:active:before
+      &:active:not(h2):before
         content: ''
         display: block
         position: absolute
@@ -101,7 +124,6 @@ $button-pressed-color: rgba(255,255,255,0.15)
         z-index: 3
 
       .liquid
-        transition: all 0.1s ease-out
         background: rgba(255,255,255,0.35)
         width: $knob-size
         height: $knob-size

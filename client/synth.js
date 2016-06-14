@@ -11,7 +11,7 @@ var oscillators = [],
     gainNode    = context.createGain(),
     compressor  = context.createDynamicsCompressor();
 
-compressor.threshold.value = -50;
+compressor.threshold.value = -30;
 compressor.knee.value = 40;
 compressor.ratio.value = 12;
 compressor.reduction.value = -20;
