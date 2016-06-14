@@ -23,7 +23,7 @@ class Range {
     this.min = min || 0;
     this.max = max || 1;
     this.default = value || this.min;
-    this.setValue(this.default);
+    this.value = this.default;
     Range.hideInfo();
     this.unit = unit;
     this.negative = negative;
@@ -32,7 +32,7 @@ class Range {
   }
 
   reset() {
-    this.setValue(this.default);
+    this.value = this.default;
   }
 
   initialize() {
@@ -49,7 +49,7 @@ class Range {
     });
 
     this.element.addEventListener('wheel', event => {
-      this.setValue(this.value - this.step * event.deltaY / Math.abs(event.deltaY));
+      this.value = this.value - this.step * event.deltaY / Math.abs(event.deltaY);
     });
 
     this.element.addEventListener('dblclick', event => {
@@ -67,8 +67,20 @@ class Range {
     });
   }
 
-  setValue(value) {
-    this.value = value;
+  get value() {
+    return this._value;
+  }
+
+  set value(value) {
+    this._value = value;
+
+    if (this.value < this.min && !this.negative)
+      this.value = this.min;
+    else if (this.value > this.max)
+      this.value = this.max;
+    else if (this.value < -this.max)
+      this.value = -this.max;
+
     if (typeof this.watcher === 'function')
       this.watcher(value);
     this.updateVisuals(this.ratio);
@@ -123,7 +135,7 @@ class Range {
 
     var value = ratio * (following.max - following.min) + following.min;
 
-    following.setValue(value);
+    following.value = value;
   }
 
   static follow(range) {

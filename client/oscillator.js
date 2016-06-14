@@ -8,15 +8,15 @@ class Oscillator {
     this.gains = [];
     this.ampGains = [];
     this.filters = [];
-    this._waveform = waveform;
-    this._cutoff = cutoff;
-    this._gain = gain || 0.3;
-    this._detune = 0;
+    this.waveform = waveform;
+    this.cutoff = cutoff;
+    this.gain = gain || 0.3;
+    this.detune = 0;
     this.envelope = envelope;
     this.ampEnvelope = ampEnvelope;
-    this._ampGain = ampGain;
+    this.ampGain = ampGain;
     this.context = audioContext;
-    this._running = true;
+    this.running = true;
   }
 
   get running() { return this._running; }
@@ -63,10 +63,10 @@ class Oscillator {
 
   createOscillator(semitone) {
     var osc = this.context.createOscillator();
-    osc.type = this._waveform;
+    osc.type = this.waveform;
     osc.semitone = semitone;
     osc.frequency.value = Oscillator.getFrequency(semitone);
-    osc.detune.value = this._detune;
+    osc.detune.value = this.detune;
     osc.start();
     return osc;
   }
@@ -74,7 +74,7 @@ class Oscillator {
   createFilter(type) {
     var filter = this.context.createBiquadFilter();
     filter.type = type;
-    filter.frequency.value = this._cutoff;
+    filter.frequency.value = this.cutoff;
     return filter;
   }
 
@@ -88,8 +88,8 @@ class Oscillator {
     this.stop(semitone);
 
     var osc     = this.createOscillator(semitone),
-        gain    = this.createGain(this._gain),
-        ampGain = this.createGain(this._ampGain),
+        gain    = this.createGain(this.gain),
+        ampGain = this.createGain(this.ampGain),
         filter  = this.createFilter('lowpass');
 
     osc.connect(filter);

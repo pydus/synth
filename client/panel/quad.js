@@ -24,7 +24,7 @@ class Quad {
     button.addEventListener('click', function(event) {
       self.clear();
       this.classList.add('pressed');
-      self.setValue(this.id);
+      self.value = this.id;
     });
   }
 
@@ -32,8 +32,12 @@ class Quad {
     this.watcher = fn;
   }
 
-  setValue(value) {
-    this.value = value;
+  get value() {
+    return this._value;
+  }
+
+  set value(value) {
+    this._value = value;
     if (typeof this.watcher === 'function')
       this.watcher(value);
   }
