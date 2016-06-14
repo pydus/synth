@@ -2,17 +2,21 @@ const INTERVAL = Math.pow(2, 1 / 12),
       A        = 440;
 
 class Oscillator {
-  constructor(waveform, cutoff, gain, envelope, audioContext) {
+  constructor(waveform, cutoff, gain, envelope,
+      ampGain, ampEnvelope, audioContext) {
     this.oscillators = [];
     this.gains = [];
+    this.ampGains = [];
     this.filters = [];
-    this.waveform = waveform;
-    this.cutoff = cutoff;
-    this.gain = gain || 0.3;
-    this.detune = 0;
+    this._waveform = waveform;
+    this._cutoff = cutoff;
+    this._gain = gain || 0.3;
+    this._detune = 0;
     this.envelope = envelope;
+    this.ampEnvelope = ampEnvelope;
+    this._ampGain = ampGain;
     this.context = audioContext;
-    this.running = true;
+    this._running = true;
   }
 
   get running() { return this._running; }
@@ -20,6 +24,7 @@ class Oscillator {
   get detune() { return this._detune; }
   get cutoff() { return this._cutoff; }
   get gain() { return this._gain; }
+  get ampGain() { return this._ampGain; }
 
   set running(value) {
     this._running = value;
@@ -47,6 +52,11 @@ class Oscillator {
     this.gains.forEach(gainNode => gainNode.gain.value = value);
   }
 
+  set ampGain(value) {
+    this._ampGain = value;
+    this.ampGains.forEach(gainNode => gainNode.gain.value = value);
+  }
+
   connect(output) {
     this.output = output;
   }
@@ -61,36 +71,40 @@ class Oscillator {
     return osc;
   }
 
-  createFilter() {
+  createFilter(type) {
     var filter = this.context.createBiquadFilter();
-    filter.type = 'lowpass';
+    filter.type = type;
     filter.frequency.value = this._cutoff;
     return filter;
   }
 
-  createGain() {
+  createGain(value) {
     var gainNode = this.context.createGain();
-    gainNode.gain.value = this._gain;
+    gainNode.gain.value = value;
     return gainNode;
   }
 
   play(semitone) {
     this.stop(semitone);
 
-    var osc    = this.createOscillator(semitone),
-        gain   = this.createGain(),
-        filter = this.createFilter();
+    var osc     = this.createOscillator(semitone),
+        gain    = this.createGain(this._gain),
+        ampGain = this.createGain(this._ampGain),
+        filter  = this.createFilter('lowpass');
 
     osc.connect(filter);
-    this.envelope.connect(gain.gain);
+    this.envelope.connect(gain);
+    this.ampEnvelope.connect(ampGain);
     filter.connect(gain);
+    gain.connect(ampGain);
 
     if (this.running)
-      gain.connect(this.output);
+      ampGain.connect(this.output);
 
     this.oscillators.push(osc);
     this.filters.push(filter);
     this.gains.push(gain);
+    this.ampGains.push(ampGain);
   }
 
   stop(semitone) {
@@ -98,24 +112,31 @@ class Oscillator {
       if (this.oscillators[i].semitone !== semitone)
         continue;
 
-      const osc    = this.oscillators[i],
-            filter = this.filters[i],
-            gain   = this.gains[i];
+      const osc     = this.oscillators[i],
+            filter  = this.filters[i],
+            gain    = this.gains[i],
+            ampGain = this.ampGains[i];
 
-      this.envelope.releaseNow(gain.gain, () => {
+      const fn = () => {
         osc.stop();
         osc.isUsed = true;
         filter.isUsed = true;
         gain.isUsed = true;
-        this.clean();
-      });
+        ampGain.isUsed = true;
+        this.clean()
+      };
+
+      if (this.envelope.release > this.ampEnvelope.release)
+        this.envelope.releaseNow(gain, fn);
+      else this.ampEnvelope.releaseNow(ampGain, fn);
     }
   }
 
   clean() {
     var newOscillators = [],
         newFilters     = [],
-        newGains       = [];
+        newGains       = [],
+        newAmpGains    = [];
 
     this.oscillators.forEach(osc => {
       if (!osc.isUsed)
@@ -132,9 +153,15 @@ class Oscillator {
         newGains.push(gain);
     });
 
+    this.ampGains.forEach(ampGain => {
+      if (!ampGain.isUsed)
+        newAmpGains.push(ampGain);
+    });
+
     this.oscillators = newOscillators;
     this.filters = newFilters;
     this.gains = newGains;
+    this.ampGains = newAmpGains;
   }
 
   unMute() {
