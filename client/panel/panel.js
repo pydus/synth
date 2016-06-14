@@ -12,7 +12,7 @@ var headings = document.querySelectorAll('.oscillator h1'),
 var nOscillators     = 6,
     oscillatorPanels = [];
 
-var ampGain = new Tube(tubes[0], MAX_AMP_GAIN / 2, '%', 0, MAX_AMP_GAIN);
+var ampGain = new Tube(tubes[0], 0.8 * MAX_AMP_GAIN, '%', 0, MAX_AMP_GAIN);
 
 const initializeHeadings = () => {
   for (var i = 0; i < headings.length; i++) {
@@ -38,7 +38,7 @@ var panel = {
 for (var i = 0; i < nOscillators; i++) {
   var waveform = new Quad(quads[i], 'sine'),
       detune   = new Knob(knobs[i * 2], 0, 'cents', 0, 1200, true),
-      gain     = new Knob(knobs[i * 2 + 1], 0.5, '%', 0, 0.5),
+      gain     = new Knob(knobs[i * 2 + 1], 0.25, '%', 0, 0.5),
       osc      = new OscillatorPanel(waveform, detune, gain);
   if (i > 1)
     osc.setRunning(false);
