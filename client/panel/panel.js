@@ -3,7 +3,8 @@ const OscillatorUnit = require('./oscillator-unit'),
       Quad           = require('./quad'),
       Tube           = require('./tube'),
       Knob           = require('./knob'),
-      MAX_AMP_GAIN   = 0.15;
+      MAX_AMP_GAIN   = 0.15,
+      MAX_OSC_GAIN   = 0.5;
 
 var headings  = document.querySelectorAll('.oscillator .main h1'),
     quads     = document.getElementsByClassName('quadbutton'),
@@ -41,11 +42,11 @@ for (var i = 0; i < nOscillators; i++) {
   var waveform = new Quad(quads[i], 'sine'),
       detune   = new Knob(knobs[i * 3], 0, 'cents', 0, 1200, true),
       cutoff   = new Knob(knobs[i * 3 + 1], 8000, 'Hz', 0, 10000),
-      gain     = new Knob(knobs[i * 3 + 2], 0.25, '%', 0, 0.5),
-      attack   = new Knob(verticals[i].children[1], 0.1, 's', 0, 1),
+      gain     = new Knob(knobs[i * 3 + 2], MAX_OSC_GAIN / 2, '%', 0, MAX_OSC_GAIN),
+      attack   = new Knob(verticals[i].children[1], 0, 's', 0, 1),
       decay    = new Knob(verticals[i].children[3], 0.5, 's', 0, 1),
-      sustain  = new Knob(verticals[i].children[5], 0.5, 's', 0, 1),
-      release  = new Knob(verticals[i].children[7], 0.1, 's', 0, 1),
+      sustain  = new Knob(verticals[i].children[5], MAX_OSC_GAIN / 2, '%', 0, MAX_OSC_GAIN),
+      release  = new Knob(verticals[i].children[7], 0, 's', 0, 1),
       envUnit  = new EnvelopeUnit(attack, decay, sustain, release),
       osc      = new OscillatorUnit(waveform, detune, cutoff, gain, envUnit);
 

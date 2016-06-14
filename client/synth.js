@@ -26,10 +26,11 @@ for (var i = 0; i < panel.nOscillators; i++) {
   const oscUnit  = panel[`osc${i + 1}`];
 
   const envelope = new Envelope(
-    oscUnit.envelope.attack,
-    oscUnit.envelope.decay,
-    oscUnit.envelope.sustain,
-    oscUnit.envelope.release
+    oscUnit.envelope.attack.value,
+    oscUnit.envelope.decay.value,
+    oscUnit.envelope.sustain.value,
+    oscUnit.envelope.release.value,
+    context
   );
 
   const osc = new Oscillator(
@@ -40,10 +41,10 @@ for (var i = 0; i < panel.nOscillators; i++) {
     context
   );
 
-  envelope.attack.watch(value => envelope.attack = value);
-  envelope.decay.watch(value => envelope.decay = value);
-  envelope.sustain.watch(value => envelope.sustain = value);
-  envelope.release.watch(value => envelope.release = value);
+  oscUnit.envelope.attack.watch(value => envelope.attack = value);
+  oscUnit.envelope.decay.watch(value => envelope.decay = value);
+  oscUnit.envelope.sustain.watch(value => envelope.sustain = value);
+  oscUnit.envelope.release.watch(value => envelope.release = value);
 
   osc.running = oscUnit.running;
   oscUnit.watchRunning(value => osc.running = value);

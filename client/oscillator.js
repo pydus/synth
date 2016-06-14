@@ -4,7 +4,7 @@ const INTERVAL = Math.pow(2, 1 / 12),
 class Oscillator {
   constructor(waveform, cutoff, gain, envelope, audioContext) {
     this.oscillators = [];
-    this.gainNodes = [];
+    this.gains = [];
     this.filters = [];
     this.waveform = waveform;
     this.cutoff = cutoff;
@@ -29,82 +29,120 @@ class Oscillator {
 
   set waveform(waveform) {
     this._waveform = waveform;
-    this.oscillators.forEach(osc => {
-      osc.type = waveform;
-    });
+    this.oscillators.forEach(osc => osc.type = waveform);
   }
 
   set detune(value) {
     this._detune = value;
-    this.oscillators.forEach(osc => {
-      osc.detune.value = value;
-    });
+    this.oscillators.forEach(osc => osc.detune.value = value);
   }
 
   set cutoff(value) {
     this._cutoff = value;
-    this.filters.forEach(filter => {
-      filter.frequency.value = value;
-    });
+    this.filters.forEach(filter => filter.frequency.value = value);
   }
 
   set gain(value) {
     this._gain = value;
-    this.gainNodes.forEach(gainNode => {
-      gainNode.gain.value = value;
-    });
+    this.gains.forEach(gainNode => gainNode.gain.value = value);
   }
 
   connect(output) {
     this.output = output;
   }
 
-  play(semitone) {
-    this.stop(semitone);
-
-    var osc      = this.context.createOscillator(),
-        gainNode = this.context.createGain(),
-        filter   = this.context.createBiquadFilter();
-
+  createOscillator(semitone) {
+    var osc = this.context.createOscillator();
     osc.type = this._waveform;
     osc.semitone = semitone;
     osc.frequency.value = Oscillator.getFrequency(semitone);
     osc.detune.value = this._detune;
     osc.start();
+    return osc;
+  }
 
+  createFilter() {
+    var filter = this.context.createBiquadFilter();
     filter.type = 'lowpass';
     filter.frequency.value = this._cutoff;
+    return filter;
+  }
 
+  createGain() {
+    var gainNode = this.context.createGain();
     gainNode.gain.value = this._gain;
+    return gainNode;
+  }
+
+  play(semitone) {
+    this.stop(semitone);
+
+    var osc    = this.createOscillator(semitone),
+        gain   = this.createGain(),
+        filter = this.createFilter();
 
     osc.connect(filter);
-    filter.connect(gainNode);
+    this.envelope.connect(gain.gain);
+    filter.connect(gain);
 
     if (this.running)
-      gainNode.connect(this.output);
+      gain.connect(this.output);
 
     this.oscillators.push(osc);
     this.filters.push(filter);
-    this.gainNodes.push(gainNode);
+    this.gains.push(gain);
   }
 
   stop(semitone) {
     for (var i = 0; i < this.oscillators.length; i++) {
       if (this.oscillators[i].semitone !== semitone)
         continue;
-      this.oscillators[i].stop();
-      this.oscillators.splice(i, 1);
-      this.filters.splice(i, 1);
-      this.gainNodes.splice(i, 1);
+
+      const osc    = this.oscillators[i],
+            filter = this.filters[i],
+            gain   = this.gains[i];
+
+      this.envelope.releaseNow(gain.gain, () => {
+        osc.stop();
+        osc.isUsed = true;
+        filter.isUsed = true;
+        gain.isUsed = true;
+        this.clean();
+      });
     }
   }
 
+  clean() {
+    var newOscillators = [],
+        newFilters     = [],
+        newGains       = [];
+
+    this.oscillators.forEach(osc => {
+      if (!osc.isUsed)
+        newOscillators.push(osc);
+    });
+
+    this.filters.forEach(filter => {
+      if (!filter.isUsed)
+        newFilters.push(filter);
+    });
+
+    this.gains.forEach(gain => {
+      if (!gain.isUsed)
+        newGains.push(gain);
+    });
+
+    this.oscillators = newOscillators;
+    this.filters = newFilters;
+    this.gains = newGains;
+  }
+
   unMute() {
-    this.gainNodes.forEach(gainNode => gainNode.connect(this.output));
+    this.gains.forEach(gainNode => gainNode.connect(this.output));
   }
 
   mute() {
-    this.gainNodes.forEach(gainNode => gainNode.disconnect());
+    this.gains.forEach(gainNode => gainNode.disconnect());
   }
 
   static getFrequency(semitone) {

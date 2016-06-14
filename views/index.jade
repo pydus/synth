@@ -53,7 +53,7 @@ block content
     .knobs
       h2 Detune
       h2 Cutoff
-      h2 Gain
+      h2 Level
       +knob
       +knob
       +knob
@@ -90,22 +90,27 @@ block content
         +oscillator('OSC5')
         +oscillator('OSC6')
         .effects
-          h1 Effects
+          h1 Filter / Effects
           .knobs
+            h2 Cutoff
+            h2 Reverb
+            +knob
+            +knob
+            h2 Size
+            h2 Decay
+            +knob
+            +knob
             h2 Delay
             h2 Time
             +knob
             +knob
-            h2 Reverb
-            h2 Decay
-            +knob
-            +knob
-            h2 Size
-            h2 
-            +knob
         .amp
-          h1 Amp
+          h1 Envelope
           .knobs
+            h2 Level
+            h2.hidden
+            +knob
+            .hidden.knob
             h2 Attack
             h2 Decay
             +knob
