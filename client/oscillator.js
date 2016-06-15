@@ -119,6 +119,10 @@ class Oscillator {
 
       const fn = () => {
         osc.stop();
+        osc.disconnect();
+        filter.disconnect();
+        gain.disconnect();
+        ampGain.disconnect();
         osc.isUsed = true;
         filter.isUsed = true;
         gain.isUsed = true;

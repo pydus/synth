@@ -4,7 +4,6 @@ class Envelope {
     this.decay = decay;
     this.sustain = sustain;
     this.release = release;
-    this.lastNode = undefined;
   }
 
   connect(node) {
