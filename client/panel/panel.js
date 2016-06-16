@@ -11,7 +11,8 @@ var headings  = document.querySelectorAll('.oscillator .main h1'),
     knobs     = document.querySelectorAll('.oscillator .main .knob'),
     tubes     = document.getElementsByClassName('tube'),
     verticals = document.getElementsByClassName('vertical'),
-    ampKnobs  = document.querySelector('.amp .knobs');
+    ampKnobs  = document.querySelector('.amp .knobs'),
+    matrix    = document.querySelector('.matrix');
 
 var nOscillators    = 6,
     oscillatorUnits = [];

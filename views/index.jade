@@ -119,8 +119,16 @@ block content
             h2 Release
             +knob
             +knob
+        .matrix
+          h1 FM
+          .knobs
+          - for (var y = 0; y < 6; y++) {
+          -   for (var x = 0; x < 6; x++) {
+              +knob
+          -   }
+              br
+          - }
         .info
-          h1 124 cents
       .keys
         +octave(2)
         +octave(3)

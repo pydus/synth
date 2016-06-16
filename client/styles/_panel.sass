@@ -25,7 +25,6 @@ $button-pressed-color: rgba(255,255,255,0.15)
   height: $panel-height
   width: $panel-width
   box-sizing: border-box
-  overflow: hidden
   margin-bottom: $margin-bottom
   padding: 0 20px
 
@@ -33,7 +32,7 @@ $button-pressed-color: rgba(255,255,255,0.15)
     position: relative
     display: inline-block
     vertical-align: top
-    margin: 8px 5px
+    margin: 8px 7px
 
   h1
     text-align: center
@@ -194,3 +193,10 @@ $button-pressed-color: rgba(255,255,255,0.15)
     .knob, h2
       &:nth-child(2n-1)
         margin-right: $osc-knob-spacing
+
+  .matrix
+    float: left
+    margin-left: -5px
+    margin-top: 10px
+    .knob
+      margin: 0 2px
