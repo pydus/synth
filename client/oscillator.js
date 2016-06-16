@@ -11,10 +11,10 @@ class Oscillator {
     this.waveform = waveform;
     this.cutoff = cutoff;
     this.gain = gain || 0.3;
+    this.ampGain = ampGain;
     this.detune = 0;
     this.envelope = envelope;
-    this.ampEnvelope = ampEnvelope;
-    this.ampGain = ampGain;
+    envelope.connectEnvelope(ampEnvelope);
     this.context = audioContext;
     this.running = true;
   }
@@ -49,12 +49,16 @@ class Oscillator {
 
   set gain(value) {
     this._gain = value;
-    this.gains.forEach(gainNode => gainNode.gain.value = value);
+    this.addGains();
   }
 
   set ampGain(value) {
     this._ampGain = value;
-    this.ampGains.forEach(gainNode => gainNode.gain.value = value);
+    this.addGains();
+  }
+
+  addGains() {
+    this.gains.forEach(gainNode => gainNode.gain.value = this.gain + this.ampGain);
   }
 
   connect(output) {
@@ -88,23 +92,19 @@ class Oscillator {
     this.stop(semitone);
 
     var osc     = this.createOscillator(semitone),
-        gain    = this.createGain(this.gain),
-        ampGain = this.createGain(this.ampGain),
+        gain    = this.createGain(this.gain + this.ampGain),
         filter  = this.createFilter('lowpass');
 
     osc.connect(filter);
-    this.envelope.connect(gain);
-    this.ampEnvelope.connect(ampGain);
+    this.envelope.run(gain);
     filter.connect(gain);
-    gain.connect(ampGain);
 
     if (this.running)
-      ampGain.connect(this.output);
+      gain.connect(this.output);
 
     this.oscillators.push(osc);
     this.filters.push(filter);
     this.gains.push(gain);
-    this.ampGains.push(ampGain);
   }
 
   stop(semitone) {
@@ -114,33 +114,27 @@ class Oscillator {
 
       const osc     = this.oscillators[i],
             filter  = this.filters[i],
-            gain    = this.gains[i],
-            ampGain = this.ampGains[i];
+            gain    = this.gains[i];
 
       const fn = () => {
         osc.stop();
         osc.disconnect();
         filter.disconnect();
         gain.disconnect();
-        ampGain.disconnect();
         osc.isUsed = true;
         filter.isUsed = true;
         gain.isUsed = true;
-        ampGain.isUsed = true;
         this.clean()
       };
 
-      if (this.envelope.release > this.ampEnvelope.release)
-        this.envelope.releaseNow(gain, fn);
-      else this.ampEnvelope.releaseNow(ampGain, fn);
+      this.envelope.releaseNow(gain, fn);
     }
   }
 
   clean() {
     var newOscillators = [],
         newFilters     = [],
-        newGains       = [],
-        newAmpGains    = [];
+        newGains       = [];
 
     this.oscillators.forEach(osc => {
       if (!osc.isUsed)
@@ -157,15 +151,9 @@ class Oscillator {
         newGains.push(gain);
     });
 
-    this.ampGains.forEach(ampGain => {
-      if (!ampGain.isUsed)
-        newAmpGains.push(ampGain);
-    });
-
     this.oscillators = newOscillators;
     this.filters = newFilters;
     this.gains = newGains;
-    this.ampGains = newAmpGains;
   }
 
   unMute() {

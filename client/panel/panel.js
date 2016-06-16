@@ -16,10 +16,10 @@ var headings  = document.querySelectorAll('.oscillator .main h1'),
 var nOscillators    = 6,
     oscillatorUnits = [];
 
-var ampGain     = new Knob(ampKnobs.children[2], 1, '%', 0, 1),
+var ampGain     = new Knob(ampKnobs.children[2], 0, '%', 0, 1),
     attack      = new Knob(ampKnobs.children[6], 0, 's', 0, 1),
     decay       = new Knob(ampKnobs.children[7], 0, 's', 0, 1),
-    sustain     = new Knob(ampKnobs.children[10], 1 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
+    sustain     = new Knob(ampKnobs.children[10], 0 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
     release     = new Knob(ampKnobs.children[11], 0.1, 's', 0, 1),
     ampEnvelope = new EnvelopeUnit(attack, decay, sustain, release);
 
