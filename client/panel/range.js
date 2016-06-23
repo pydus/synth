@@ -82,7 +82,7 @@ class Range {
       this.value = -this.max;
 
     if (typeof this.watcher === 'function')
-      this.watcher(value);
+      this.watcher(this.value);
     this.updateVisuals(this.ratio);
     this.updateInfo();
   }
