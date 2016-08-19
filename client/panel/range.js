@@ -37,6 +37,7 @@ class Range {
 
   initialize() {
     var self = this;
+
     this.element.addEventListener('mousedown', function(event) {
       if (event.altKey) {
         self.reset();
@@ -48,6 +49,10 @@ class Range {
       }
     });
 
+    this.addListeners();
+  }
+
+  addListeners() {
     this.element.addEventListener('wheel', event => {
       this.value = this.value - this.step * event.deltaY / Math.abs(event.deltaY);
     });
