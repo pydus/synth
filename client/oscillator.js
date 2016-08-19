@@ -91,9 +91,9 @@ class Oscillator {
   play(semitone) {
     this.stop(semitone);
 
-    var osc     = this.createOscillator(semitone),
-        gain    = this.createGain(this.gain + this.ampGain),
-        filter  = this.createFilter('lowpass');
+    var osc    = this.createOscillator(semitone),
+        gain   = this.createGain(this.gain + this.ampGain),
+        filter = this.createFilter('lowpass');
 
     osc.connect(filter);
     this.envelope.run(gain);
@@ -112,9 +112,9 @@ class Oscillator {
       if (this.oscillators[i].semitone !== semitone)
         continue;
 
-      const osc     = this.oscillators[i],
-            filter  = this.filters[i],
-            gain    = this.gains[i];
+      const osc    = this.oscillators[i],
+            filter = this.filters[i],
+            gain   = this.gains[i];
 
       const fn = () => {
         osc.stop();
