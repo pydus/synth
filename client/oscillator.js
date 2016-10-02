@@ -132,28 +132,9 @@ class Oscillator {
   }
 
   clean() {
-    var newOscillators = [],
-        newFilters     = [],
-        newGains       = [];
-
-    this.oscillators.forEach(osc => {
-      if (!osc.isUsed)
-        newOscillators.push(osc);
-    });
-
-    this.filters.forEach(filter => {
-      if (!filter.isUsed)
-        newFilters.push(filter);
-    });
-
-    this.gains.forEach(gain => {
-      if (!gain.isUsed)
-        newGains.push(gain);
-    });
-
-    this.oscillators = newOscillators;
-    this.filters = newFilters;
-    this.gains = newGains;
+    this.oscillators = this.oscillators.filter(osc => !osc.isUsed);
+    this.filters = this.filters.filter(fil => !fil.isUsed);
+    this.gains = this.gains.filter(gain => !gain.isUsed);
   }
 
   unMute() {
