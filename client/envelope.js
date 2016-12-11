@@ -20,18 +20,24 @@ class Envelope {
     var param = node.gain;
     const paramValue = param.value;
 
-    var connectedAttack  = this.connectedEnvelope ? this.connectedEnvelope.attack : 0,
-        connectedDecay   = this.connectedEnvelope ? this.connectedEnvelope.decay : 0,
-        connectedSustain = this.connectedEnvelope ? this.connectedEnvelope.sustain : 0;
+    var connectedAttack = 0,
+        connectedDecay = 0,
+        connectedSustain = 1;
+
+    if (this.connectedEnvelope) {
+      connectedAttack = this.connectedEnvelope.attack;
+      connectedDecay = this.connectedEnvelope.decay;
+      connectedSustain = this.connectedEnvelope.sustain;
+    }
 
     var attack  = this.attack + connectedAttack,
         decay   = this.decay + connectedDecay,
-        sustain = this.sustain + connectedSustain;
+        sustain = this.sustain * connectedSustain;
 
     param.cancelScheduledValues(now);
     param.setValueAtTime(0, now);
     param.linearRampToValueAtTime(paramValue, now + attack);
-    param.linearRampToValueAtTime(sustain, now + attack + decay);
+    param.linearRampToValueAtTime(paramValue * sustain, now + attack + decay);
   }
 
   releaseNow(node, cb) {

@@ -20,7 +20,7 @@ var nOscillators    = 6,
 var ampGain     = new Knob(ampKnobs.children[2], 0, '%', 0, 1),
     attack      = new Knob(ampKnobs.children[6], 0, 's', 0, 1),
     decay       = new Knob(ampKnobs.children[7], 0, 's', 0, 1),
-    sustain     = new Knob(ampKnobs.children[10], 0 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
+    sustain     = new Knob(ampKnobs.children[10], 1, '%', 0, 1),
     release     = new Knob(ampKnobs.children[11], 0.1, 's', 0, 1),
     ampEnvelope = new EnvelopeUnit(attack, decay, sustain, release);
 
@@ -50,7 +50,7 @@ const initializeOscillators = () => {
         gain     = new Knob(knobs[i * 3 + 2], 0.5 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
         attack   = new Knob(verticals[i].children[1], 0, 's', 0, 1),
         decay    = new Knob(verticals[i].children[3], 0.5, 's', 0, 1),
-        sustain  = new Knob(verticals[i].children[5], 0.5 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
+        sustain  = new Knob(verticals[i].children[5], 1, '%', 0, 1),
         release  = new Knob(verticals[i].children[7], 0, 's', 0, 1),
         envUnit  = new EnvelopeUnit(attack, decay, sustain, release),
         osc      = new OscillatorUnit(waveform, detune, cutoff, gain, envUnit);
