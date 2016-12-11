@@ -57,8 +57,9 @@ const initializeOscillators = () => {
         envUnit  = new EnvelopeUnit(attack, decay, sustain, release),
         osc      = new OscillatorUnit(waveform, detune, cutoff, gain, envUnit);
 
-    if (i > 3)
+    if (i > 3) {
       osc.running = false;
+    }
 
     panel[`osc${i + 1}`] = osc;
     osc.initialize();

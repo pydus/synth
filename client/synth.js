@@ -25,8 +25,9 @@ const ampEnvelope = new Envelope(
 compressor.threshold.value = -30;
 compressor.knee.value = 40;
 compressor.ratio.value = 12;
-if (typeof compressor.reduction === 'object')
+if (typeof compressor.reduction === 'object') {
   compressor.reduction.value = -20;
+}
 compressor.attack.value = 0;
 compressor.release.value = 0.25;
 

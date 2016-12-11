@@ -23,8 +23,11 @@ class Oscillator {
 
   set running(value) {
     this._running = value;
-    if (value) this.unMute();
-    else this.mute();
+    if (value) {
+      this.unMute();
+    } else {
+      this.mute();
+    }
   }
 
   set waveform(waveform) {
@@ -76,8 +79,9 @@ class Oscillator {
 
   stop(semitone) {
     for (let i = 0; i < this.oscillators.length; i++) {
-      if (this.oscillators[i].semitone !== semitone)
+      if (this.oscillators[i].semitone !== semitone) {
         continue;
+      }
 
       const osc    = this.oscillators[i],
             filter = this.filters[i],

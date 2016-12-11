@@ -38,15 +38,13 @@ class Range {
   }
 
   initialize() {
-    let self = this;
-
-    this.element.addEventListener('mousedown', function(event) {
+    this.element.addEventListener('mousedown', (event) => {
       if (event.altKey) {
-        self.reset();
+        this.reset();
       } else {
-        self.clientY = event.clientY;
-        self.startRatio = self.ratio;
-        Range.follow(self);
+        this.clientY = event.clientY;
+        this.startRatio = this.ratio;
+        Range.follow(this);
         Range.followEvent(event);
       }
     });
@@ -55,20 +53,20 @@ class Range {
   }
 
   addListeners() {
-    this.element.addEventListener('wheel', event => {
+    this.element.addEventListener('wheel', (event) => {
       this.value = this.value - this.step * event.deltaY / Math.abs(event.deltaY);
     });
 
-    this.element.addEventListener('dblclick', event => {
+    this.element.addEventListener('dblclick', (event) => {
       this.reset();
     });
 
-    this.element.addEventListener('mouseover', event => {
+    this.element.addEventListener('mouseover', (event) => {
       this.updateInfo();
       hovering = true;
     });
 
-    this.element.addEventListener('mouseout', event => {
+    this.element.addEventListener('mouseout', (event) => {
       Range.hideInfo();
       hovering = false;
     });
@@ -81,15 +79,18 @@ class Range {
   set value(value) {
     this._value = value;
 
-    if (this.value < this.min && !this.negative)
+    if (this.value < this.min && !this.negative) {
       this.value = this.min;
-    else if (this.value > this.max)
+    } else if (this.value > this.max) {
       this.value = this.max;
-    else if (this.value < -this.max)
+    } else if (this.value < -this.max) {
       this.value = -this.max;
+    }
 
-    if (typeof this.watcher === 'function')
+    if (typeof this.watcher === 'function') {
       this.watcher(this.value);
+    }
+
     this.updateVisuals(this.ratio);
     this.updateInfo();
   }
@@ -97,9 +98,11 @@ class Range {
   updateInfo() {
     let text;
 
-    if (this.unit === '%')
+    if (this.unit === '%') {
       text = `${(100 * this.value / this.max).toFixed(2)}%`;
-    else text = `${this.value.toFixed(2)} ${this.unit}`;
+    } else {
+      text = `${this.value.toFixed(2)} ${this.unit}`;
+    }
 
     Range.showInfo(text);
   }
@@ -132,13 +135,19 @@ class Range {
 
     let ratio;
 
-    if (!following.distance)
+    if (!following.distance) {
       ratio = (rect.top - (event.clientY - rect.height)) / rect.height;
-    else ratio = following.startRatio - dy / distance;
+    } else {
+      ratio = following.startRatio - dy / distance;
+    }
 
-    if (ratio < 0 && !following.negative) ratio = 0;
-    else if (ratio > 1) ratio = 1;
-    else if (ratio < -1) ratio = -1;
+    if (ratio < 0 && !following.negative) {
+      ratio = 0;
+    } else if (ratio > 1) {
+      ratio = 1;
+    } else if (ratio < -1) {
+      ratio = -1;
+    }
 
     let value = ratio * (following.max - following.min) + following.min;
 
@@ -152,8 +161,9 @@ class Range {
 
   static unfollow() {
     document.removeEventListener('mousemove', Range.followEvent);
-    if (!hovering)
+    if (!hovering) {
       Range.hideInfo();
+    }
   }
 }
 
