@@ -1,4 +1,4 @@
-const context    = new (window.AudioContext || window.webkitAudioContext)(),
+const context    = require('./context'),
       panel      = require('./panel/panel'),
       keys       = require('./keys'),
       Envelope   = require('./envelope'),
@@ -52,8 +52,7 @@ for (var i = 0; i < panel.nOscillators; i++) {
     oscUnit.gain.value,
     envelope,
     panel.amp.gain.value,
-    ampEnvelope,
-    context
+    ampEnvelope
   );
 
   oscUnit.envelope.attack.watch(value => envelope.attack = value);
