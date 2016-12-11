@@ -3,19 +3,15 @@
 const voiceComponents = require('./voice-components');
 
 class Oscillator {
-  constructor(waveform, cutoff, gain, envelope,
-      ampGain, ampEnvelope) {
+  constructor(waveform, cutoff, gain, envelope) {
     this.oscillators = [];
     this.gains = [];
-    this.ampGains = [];
     this.filters = [];
     this.waveform = waveform;
     this.cutoff = cutoff;
     this.gain = gain || 0.3;
-    this.ampGain = ampGain;
     this.detune = 0;
     this.envelope = envelope;
-    envelope.connectEnvelope(ampEnvelope);
     this.running = true;
   }
 
@@ -24,7 +20,6 @@ class Oscillator {
   get detune() { return this._detune; }
   get cutoff() { return this._cutoff; }
   get gain() { return this._gain; }
-  get ampGain() { return this._ampGain; }
 
   set running(value) {
     this._running = value;
@@ -52,13 +47,8 @@ class Oscillator {
     this.addGains();
   }
 
-  set ampGain(value) {
-    this._ampGain = value;
-    this.addGains();
-  }
-
   addGains() {
-    this.gains.forEach(gainNode => gainNode.gain.value = this.gain + this.ampGain);
+    this.gains.forEach(gainNode => gainNode.gain.value = this.gain);
   }
 
   connect(output) {
@@ -68,8 +58,8 @@ class Oscillator {
   play(semitone) {
     this.stop(semitone);
 
-    var osc    = voiceComponents.createOscillator(semitone, this.detune, this.waveform),
-        gain   = voiceComponents.createGain(this.gain + this.ampGain),
+    let osc    = voiceComponents.createOscillator(semitone, this.detune, this.waveform),
+        gain   = voiceComponents.createGain(this.gain),
         filter = voiceComponents.createFilter('lowpass', this.cutoff);
 
     osc.connect(filter);
@@ -85,7 +75,7 @@ class Oscillator {
   }
 
   stop(semitone) {
-    for (var i = 0; i < this.oscillators.length; i++) {
+    for (let i = 0; i < this.oscillators.length; i++) {
       if (this.oscillators[i].semitone !== semitone)
         continue;
 

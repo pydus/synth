@@ -1,29 +1,26 @@
+'use strict';
+
 const context    = require('./context'),
       panel      = require('./panel/panel'),
-      keys       = require('./keys'),
-      Envelope   = require('./envelope'),
+      keys       = require('./keys');
+
+const Envelope   = require('./envelope'),
       Oscillator = require('./oscillator');
 
 panel.initialize();
 keys.initialize();
 
-var oscillators = [],
-    merger      = context.createChannelMerger(1),
-    gainNode    = context.createGain(),
-    compressor  = context.createDynamicsCompressor();
+const oscillators = [],
+      merger      = context.createChannelMerger(1),
+      gainNode    = context.createGain(),
+      compressor  = context.createDynamicsCompressor();
 
-var ampEnvelope = new Envelope(
-  panel.amp.envelope.attack.value,
-  panel.amp.envelope.decay.value,
-  panel.amp.envelope.sustain.value,
-  panel.amp.envelope.release.value
+const ampEnvelope = new Envelope(
+  panel.envelope.attack.value,
+  panel.envelope.decay.value,
+  panel.envelope.sustain.value,
+  panel.envelope.release.value
 );
-
-panel.amp.gain.watch(value => oscillators.forEach(osc => osc.ampGain = value));
-panel.amp.envelope.attack.watch(value => ampEnvelope.attack = value);
-panel.amp.envelope.decay.watch(value => ampEnvelope.decay = value);
-panel.amp.envelope.sustain.watch(value => ampEnvelope.sustain = value);
-panel.amp.envelope.release.watch(value => ampEnvelope.release = value);
 
 compressor.threshold.value = -30;
 compressor.knee.value = 40;
@@ -36,7 +33,7 @@ compressor.release.value = 0.25;
 gainNode.gain.value = panel.gain.value;
 panel.gain.watch(value => gainNode.gain.value = value);
 
-for (var i = 0; i < panel.nOscillators; i++) {
+for (let i = 0; i < panel.nOscillators; i++) {
   const oscUnit  = panel[`osc${i + 1}`];
 
   const envelope = new Envelope(
@@ -50,9 +47,7 @@ for (var i = 0; i < panel.nOscillators; i++) {
     oscUnit.waveform.value,
     oscUnit.cutoff.value,
     oscUnit.gain.value,
-    envelope,
-    panel.amp.gain.value,
-    ampEnvelope
+    envelope
   );
 
   oscUnit.envelope.attack.watch(value => envelope.attack = value);

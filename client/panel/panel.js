@@ -1,3 +1,5 @@
+'use strict';
+
 const OscillatorUnit = require('./oscillator-unit'),
       EnvelopeUnit   = require('./envelope-unit'),
       Quad           = require('./quad'),
@@ -6,52 +8,52 @@ const OscillatorUnit = require('./oscillator-unit'),
       MAX_AMP_GAIN   = 0.15,
       MAX_OSC_GAIN   = 0.5;
 
-var headings    = document.querySelectorAll('.oscillator .main h1'),
-    quads       = document.getElementsByClassName('quadbutton'),
-    knobs       = document.querySelectorAll('.oscillator .main .knob'),
-    tubes       = document.getElementsByClassName('tube'),
-    verticals   = document.getElementsByClassName('vertical'),
-    ampKnobs    = document.querySelector('.amp .knobs'),
-    matrixKnobs = document.querySelectorAll('.matrix .knob');
+const headings    = document.querySelectorAll('.oscillator .main h1'),
+      quads       = document.getElementsByClassName('quadbutton'),
+      knobs       = document.querySelectorAll('.oscillator .main .knob'),
+      tubes       = document.getElementsByClassName('tube'),
+      verticals   = document.getElementsByClassName('vertical'),
+      ampKnobs    = document.querySelector('.amp .knobs'),
+      matrixKnobs = document.querySelectorAll('.matrix .knob');
 
-var nOscillators    = 6,
-    oscillatorUnits = [];
+const nOscillators    = 6,
+      oscillatorUnits = [];
 
-var ampGain     = new Knob(ampKnobs.children[2], 0, '%', 0, 1),
-    attack      = new Knob(ampKnobs.children[6], 0, 's', 0, 1),
-    decay       = new Knob(ampKnobs.children[7], 0, 's', 0, 1),
-    sustain     = new Knob(ampKnobs.children[10], 1, '%', 0, 1),
-    release     = new Knob(ampKnobs.children[11], 0.1, 's', 0, 1),
-    ampEnvelope = new EnvelopeUnit(attack, decay, sustain, release);
+const attack   = new Knob(ampKnobs.children[2], 0, 's', 0, 20),
+      decay    = new Knob(ampKnobs.children[3], 20, 's', 0, 20),
+      sustain  = new Knob(ampKnobs.children[6], 1, '%', 0, 1),
+      release  = new Knob(ampKnobs.children[7], 0.1, 's', 0, 10),
+      envelope = new EnvelopeUnit(attack, decay, sustain, release);
 
-var masterGain = new Tube(tubes[0], 0.8 * MAX_AMP_GAIN, '%', 0, MAX_AMP_GAIN);
-var matrix = [];
+const masterGain = new Tube(tubes[0], 0.8 * MAX_AMP_GAIN, '%', 0, MAX_AMP_GAIN);
+
+const matrix = [];
 
 const initializeHeadings = () => {
-  for (var i = 0; i < headings.length; i++) {
+  for (let i = 0; i < headings.length; i++) {
     const n = i + 1;
     headings[i].addEventListener('click', event => panel[`osc${n}`].toggleRunning());
   }
 };
 
 const initializeMatrix = () => {
-  for (var i = 0; i < Math.pow(nOscillators, 2); i++) {
-    var knob = new Knob(matrixKnobs[i], 0, '%', 0, 1);
+  for (let i = 0; i < Math.pow(nOscillators, 2); i++) {
+    let knob = new Knob(matrixKnobs[i], 0, '%', 0, 1);
     knob.initialize();
     matrix.push(knob);
   }
 };
 
 const initializeOscillators = () => {
-  for (var i = 0; i < nOscillators; i++) {
-    var waveform = new Quad(quads[i], 'sine'),
+  for (let i = 0; i < nOscillators; i++) {
+    let waveform = new Quad(quads[i], 'sine'),
         detune   = new Knob(knobs[i * 3], 0, 'cents', 0, 1200, true),
         cutoff   = new Knob(knobs[i * 3 + 1], 8000, 'Hz', 0, 10000),
         gain     = new Knob(knobs[i * 3 + 2], 0.5 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
-        attack   = new Knob(verticals[i].children[1], 0, 's', 0, 1),
-        decay    = new Knob(verticals[i].children[3], 0.5, 's', 0, 1),
+        attack   = new Knob(verticals[i].children[1], 0, 's', 0, 20),
+        decay    = new Knob(verticals[i].children[3], 20, 's', 0, 20),
         sustain  = new Knob(verticals[i].children[5], 1, '%', 0, 1),
-        release  = new Knob(verticals[i].children[7], 0, 's', 0, 1),
+        release  = new Knob(verticals[i].children[7], 0, 's', 0, 10),
         envUnit  = new EnvelopeUnit(attack, decay, sustain, release),
         osc      = new OscillatorUnit(waveform, detune, cutoff, gain, envUnit);
 
@@ -66,21 +68,17 @@ const initializeOscillators = () => {
 
 const initialize = () => {
   initializeOscillators();
-  ampEnvelope.initialize();
+  envelope.initialize();
   masterGain.initialize();
-  ampGain.initialize();
   initializeHeadings();
   initializeMatrix();
 };
 
-var panel = {
+const panel = {
   initialize: initialize,
   nOscillators: nOscillators,
   matrix: matrix,
-  amp: {
-    gain: ampGain,
-    envelope: ampEnvelope
-  },
+  envelope: envelope,
   gain: masterGain
 };
 

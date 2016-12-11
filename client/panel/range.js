@@ -28,7 +28,7 @@ class Range {
     this.unit = unit;
     this.negative = negative;
     this.distance = distance;
-    this.step = this.max > 1 ? 1 : 0.01;
+    this.step = 0.01;
   }
 
   reset() {

@@ -30,6 +30,6 @@ module.exports = {
     })
   ],
   devServer: {
-    host: '192.168.1.67'
+    host: '192.168.1.69'
   }
 };
