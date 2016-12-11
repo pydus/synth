@@ -4,7 +4,7 @@ const context = require('./context');
 const music = require('./music');
 
 const createOscillator = (semitone, detune, waveform) => {
-  var osc = context.createOscillator();
+  let osc = context.createOscillator();
   osc.type = waveform;
   osc.semitone = semitone;
   osc.frequency.value = music.getFrequency(semitone);
@@ -14,14 +14,14 @@ const createOscillator = (semitone, detune, waveform) => {
 };
 
 const createFilter = (type, cutoff) => {
-  var filter = context.createBiquadFilter();
+  let filter = context.createBiquadFilter();
   filter.type = type;
   filter.frequency.value = cutoff;
   return filter;
 };
 
 const createGain = (value) => {
-  var gainNode = context.createGain();
+  let gainNode = context.createGain();
   gainNode.gain.value = value;
   return gainNode;
 };

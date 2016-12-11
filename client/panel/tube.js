@@ -1,3 +1,5 @@
+'use strict';
+
 const Range = require('./range');
 
 class Tube extends Range {

@@ -1,3 +1,5 @@
+'use strict';
+
 const Unit = require('./unit');
 
 class EnvelopeUnit extends Unit {

@@ -1,4 +1,6 @@
-var following,
+'use strict';
+
+let following,
     hovering = false,
     info     = document.querySelector('.panel .info');
 
@@ -36,7 +38,7 @@ class Range {
   }
 
   initialize() {
-    var self = this;
+    let self = this;
 
     this.element.addEventListener('mousedown', function(event) {
       if (event.altKey) {
@@ -93,7 +95,7 @@ class Range {
   }
 
   updateInfo() {
-    var text;
+    let text;
 
     if (this.unit === '%')
       text = `${(100 * this.value / this.max).toFixed(2)}%`;
@@ -124,11 +126,11 @@ class Range {
   }
 
   static followEvent(event) {
-    var rect     = following.element.getBoundingClientRect(),
+    let rect     = following.element.getBoundingClientRect(),
         distance = following.distance || rect.height,
         dy       = event.clientY - following.clientY;
 
-    var ratio;
+    let ratio;
 
     if (!following.distance)
       ratio = (rect.top - (event.clientY - rect.height)) / rect.height;
@@ -138,7 +140,7 @@ class Range {
     else if (ratio > 1) ratio = 1;
     else if (ratio < -1) ratio = -1;
 
-    var value = ratio * (following.max - following.min) + following.min;
+    let value = ratio * (following.max - following.min) + following.min;
 
     following.value = value;
   }

@@ -1,16 +1,19 @@
+'use strict';
+
 const keyBindings = require('./key-bindings');
 
-var isClicking      = false,
+let isClicking      = false,
     lastKeySemitone = undefined,
-    mouseSemitone   = undefined,
-    keys            = document.getElementsByClassName('key'),
-    pressWatchers   = [],
-    releaseWatchers = [],
-    onPress         = fn => pressWatchers.push(fn),
-    onRelease       = fn => releaseWatchers.push(fn);
+    mouseSemitone   = undefined;
+
+const keys            = document.getElementsByClassName('key'),
+      pressWatchers   = [],
+      releaseWatchers = [],
+      onPress         = fn => pressWatchers.push(fn),
+      onRelease       = fn => releaseWatchers.push(fn);
 
 const informWatchers = (watchers, semitone) => {
-  for (var i = 0; i < watchers.length; i++)
+  for (let i = 0; i < watchers.length; i++)
     if (typeof watchers[i] === 'function')
       watchers[i](semitone);
 };
@@ -29,20 +32,20 @@ const releaseVisuals = key => {
 };
 
 const press = (key, mouse) => {
-  var semitone = key.getAttribute('id');
+  let semitone = key.getAttribute('id');
   if (mouse) mouseSemitone = semitone;
   informPressWatchers(semitone);
   pressVisuals(key);
 };
 
 const release = key => {
-  var semitone = key.getAttribute('id');
+  let semitone = key.getAttribute('id');
   informReleaseWatchers(semitone);
   releaseVisuals(key);
 };
 
 const addMouseListeners = () => {
-  for (var i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
 
     key.addEventListener('mousedown', event => {
@@ -73,19 +76,19 @@ const addMouseListeners = () => {
 
 const addKeyListeners = () => {
   document.addEventListener('keydown', event => {
-    var semitone = keyBindings[event.key];
+    let semitone = keyBindings[event.key];
     if (semitone === lastKeySemitone) return;
     lastKeySemitone = semitone;
     if (typeof semitone === 'undefined') return;
-    var key = document.getElementById(semitone);
+    let key = document.getElementById(semitone);
     press(key);
   });
 
   document.addEventListener('keyup', event => {
     lastKeySemitone = undefined;
-    var semitone = keyBindings[event.key];
+    let semitone = keyBindings[event.key];
     if (typeof semitone === 'undefined') return;
-    var key = document.getElementById(semitone);
+    let key = document.getElementById(semitone);
     release(key);
   });
 };

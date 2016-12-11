@@ -1,3 +1,5 @@
+'use strict';
+
 class Unit {
   constructor() {
     this._running = true;

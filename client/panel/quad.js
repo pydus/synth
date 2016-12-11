@@ -1,3 +1,5 @@
+'use strict';
+
 class Quad {
   constructor(element, value) {
     this.element = element;
@@ -6,9 +8,9 @@ class Quad {
   }
 
   initialize() {
-    var button;
+    let button;
 
-    for (var i = 0; i < this.size; i++) {
+    for (let i = 0; i < this.size; i++) {
       button = this.element.children[i];
 
       if (button.id === this.value)
@@ -19,7 +21,7 @@ class Quad {
   }
 
   addListener(button) {
-    var self = this;
+    let self = this;
 
     button.addEventListener('click', function(event) {
       self.clear();
@@ -43,7 +45,7 @@ class Quad {
   }
 
   clear() {
-    for (var i = 0; i < this.size; i++)
+    for (let i = 0; i < this.size; i++)
       this.element.children[i].classList.remove('pressed');
   }
 }
