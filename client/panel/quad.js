@@ -13,8 +13,9 @@ class Quad {
     for (let i = 0; i < this.size; i++) {
       button = this.element.children[i];
 
-      if (button.id === this.value)
+      if (button.id === this.value) {
         button.classList.add('pressed');
+      }
 
       this.addListener(button);
     }
@@ -40,13 +41,15 @@ class Quad {
 
   set value(value) {
     this._value = value;
-    if (typeof this.watcher === 'function')
+    if (typeof this.watcher === 'function') {
       this.watcher(value);
+    }
   }
 
   clear() {
-    for (let i = 0; i < this.size; i++)
+    for (let i = 0; i < this.size; i++) {
       this.element.children[i].classList.remove('pressed');
+    }
   }
 }
 

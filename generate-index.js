@@ -9,10 +9,11 @@ var watching = false;
  * @param  {String} path The path at which index.html will be created.
  * @return {undefined}
  */
-const watch = path => {
+const watch = (path) => {
   fs.watch('views', (event, filename) => {
-    if (event === 'change')
+    if (event === 'change') {
       generate(path);
+    }
   })
 };
 
@@ -22,15 +23,16 @@ const watch = path => {
  * @param  {string} path The path at which index.html will be created.
  * @return {undefined}
  */
-const generate = path => {
-  if (typeof path === 'undefined')
+const generate = (path) => {
+  if (typeof path === 'undefined') {
     path = '.';
+  }
 
   var html = jade.renderFile('views/index.jade', {
     cdn: 'public/'
   });
 
-  fs.writeFile(`${path}/index.html`, html, err => {
+  fs.writeFile(`${path}/index.html`, html, (err) => {
     if (err) console.log(err);
   });
 

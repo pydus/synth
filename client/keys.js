@@ -13,32 +13,36 @@ const keys            = document.getElementsByClassName('key'),
       onRelease       = fn => releaseWatchers.push(fn);
 
 const informWatchers = (watchers, semitone) => {
-  for (let i = 0; i < watchers.length; i++)
-    if (typeof watchers[i] === 'function')
+  for (let i = 0; i < watchers.length; i++) {
+    if (typeof watchers[i] === 'function') {
       watchers[i](semitone);
+    }
+  }
 };
 
 const informPressWatchers = semitone => informWatchers(pressWatchers, semitone);
 const informReleaseWatchers = semitone => informWatchers(releaseWatchers, semitone);
 
-const pressVisuals = key => {
+const pressVisuals = (key) => {
   key.classList.add('pressed');
   key.classList.remove('not-active');
 };
 
-const releaseVisuals = key => {
+const releaseVisuals = (key) => {
   key.classList.add('not-active');
   key.classList.remove('pressed');
 };
 
 const press = (key, mouse) => {
   let semitone = key.getAttribute('id');
-  if (mouse) mouseSemitone = semitone;
+  if (mouse) {
+    mouseSemitone = semitone;
+  }
   informPressWatchers(semitone);
   pressVisuals(key);
 };
 
-const release = key => {
+const release = (key) => {
   let semitone = key.getAttribute('id');
   informReleaseWatchers(semitone);
   releaseVisuals(key);
@@ -48,48 +52,49 @@ const addMouseListeners = () => {
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
 
-    key.addEventListener('mousedown', event => {
+    key.addEventListener('mousedown', (event) => {
       isClicking = true;
       press(key, true);
     });
 
-    key.addEventListener('mouseover', event => {
-      if (isClicking)
-        press(key, true);
+    key.addEventListener('mouseover', (event) => {
+      if (isClicking) press(key, true);
     });
 
-    key.addEventListener('mouseout', event => {
-      if (isClicking)
-        release(key);
+    key.addEventListener('mouseout', (event) => {
+      if (isClicking) release(key);
     });
 
-    key.addEventListener('mouseup', event => {
+    key.addEventListener('mouseup', (event) => {
       releaseVisuals(key);
     });
   }
 
-  document.addEventListener('mouseup', event => {
+  document.addEventListener('mouseup', (event) => {
     isClicking = false;
     informReleaseWatchers(mouseSemitone);
   });
 };
 
 const addKeyListeners = () => {
-  document.addEventListener('keydown', event => {
+  document.addEventListener('keydown', (event) => {
     let semitone = keyBindings[event.key];
-    if (semitone === lastKeySemitone) return;
-    lastKeySemitone = semitone;
-    if (typeof semitone === 'undefined') return;
-    let key = document.getElementById(semitone);
-    press(key);
+    if (semitone !== lastKeySemitone) {
+      lastKeySemitone = semitone;
+      if (typeof semitone !== 'undefined') {
+        let key = document.getElementById(semitone);
+        press(key);
+      }
+    }
   });
 
-  document.addEventListener('keyup', event => {
+  document.addEventListener('keyup', (event) => {
     lastKeySemitone = undefined;
     let semitone = keyBindings[event.key];
-    if (typeof semitone === 'undefined') return;
-    let key = document.getElementById(semitone);
-    release(key);
+    if (typeof semitone !== 'undefined') {
+      let key = document.getElementById(semitone);
+      release(key);
+    }
   });
 };
 
