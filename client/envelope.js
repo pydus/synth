@@ -16,12 +16,12 @@ class Envelope {
   }
 
   run(node) {
-    let now = node.context.currentTime;
-    let gain = node.gain;
+    const now = node.context.currentTime;
+    const gain = node.gain;
 
-    let attack  = this.attack > master.attack.value ? this.attack : master.attack.value,
-        decay   = this.decay < master.decay.value ? this.decay : master.decay.value,
-        sustain = this.sustain * master.sustain.value;
+    const attack  = this.attack > master.attack.value ? this.attack : master.attack.value,
+          decay   = this.decay < master.decay.value ? this.decay : master.decay.value,
+          sustain = this.sustain * master.sustain.value;
 
     gain.cancelScheduledValues(now);
     gain.setValueAtTime(0, now);
@@ -30,9 +30,9 @@ class Envelope {
   }
 
   releaseNow(node, cb) {
-    let now = node.context.currentTime;
-    let gain = node.gain;
-    let release = this.release + master.release.value;
+    const now = node.context.currentTime;
+    const gain = node.gain;
+    const release = this.release + master.release.value;
 
     gain.cancelScheduledValues(now);
     gain.setValueAtTime(gain.value, now);

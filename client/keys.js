@@ -34,7 +34,7 @@ const releaseVisuals = (key) => {
 };
 
 const press = (key, mouse) => {
-  let semitone = key.getAttribute('id');
+  const semitone = key.getAttribute('id');
   if (mouse) {
     mouseSemitone = semitone;
   }
@@ -43,7 +43,7 @@ const press = (key, mouse) => {
 };
 
 const release = (key) => {
-  let semitone = key.getAttribute('id');
+  const semitone = key.getAttribute('id');
   informReleaseWatchers(semitone);
   releaseVisuals(key);
 };
@@ -78,11 +78,11 @@ const addMouseListeners = () => {
 
 const addKeyListeners = () => {
   document.addEventListener('keydown', (event) => {
-    let semitone = keyBindings[event.key];
+    const semitone = keyBindings[event.key];
     if (semitone !== lastKeySemitone) {
       lastKeySemitone = semitone;
       if (typeof semitone !== 'undefined') {
-        let key = document.getElementById(semitone);
+        const key = document.getElementById(semitone);
         press(key);
       }
     }
@@ -90,9 +90,9 @@ const addKeyListeners = () => {
 
   document.addEventListener('keyup', (event) => {
     lastKeySemitone = undefined;
-    let semitone = keyBindings[event.key];
+    const semitone = keyBindings[event.key];
     if (typeof semitone !== 'undefined') {
-      let key = document.getElementById(semitone);
+      const key = document.getElementById(semitone);
       release(key);
     }
   });

@@ -35,7 +35,7 @@ gainNode.gain.value = panel.gain.value;
 panel.gain.watch(value => gainNode.gain.value = value);
 
 for (let i = 0; i < panel.nOscillators; i++) {
-  const oscUnit  = panel[`osc${i + 1}`];
+  const oscUnit = panel[`osc${i + 1}`];
 
   const envelope = new Envelope(
     oscUnit.envelope.attack.value,

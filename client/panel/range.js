@@ -1,8 +1,9 @@
 'use strict';
 
-let following,
-    hovering = false,
-    info     = document.querySelector('.panel .info');
+const info = document.querySelector('.panel .info');
+
+let following;
+let hovering = false;
 
 class Range {
   /**
@@ -129,9 +130,9 @@ class Range {
   }
 
   static followEvent(event) {
-    let rect     = following.element.getBoundingClientRect(),
-        distance = following.distance || rect.height,
-        dy       = event.clientY - following.clientY;
+    const rect     = following.element.getBoundingClientRect(),
+          distance = following.distance || rect.height,
+          dy       = event.clientY - following.clientY;
 
     let ratio;
 
@@ -149,7 +150,7 @@ class Range {
       ratio = -1;
     }
 
-    let value = ratio * (following.max - following.min) + following.min;
+    const value = ratio * (following.max - following.min) + following.min;
 
     following.value = value;
   }

@@ -10,7 +10,7 @@ class Knob extends Range {
   }
 
   updateVisuals(ratio) {
-    let liquid = this.element.children[0];
+    const liquid = this.element.children[0];
     liquid.style.transform = `scale(${ratio}, ${ratio})`;
     if (ratio < 0) {
       liquid.classList.add('negative');

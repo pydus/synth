@@ -1,6 +1,6 @@
 'use strict';
 
-const voiceComponents = require('./voice-components');
+const voice = require('./voice');
 
 class Oscillator {
   constructor(waveform, cutoff, gain, envelope) {
@@ -61,16 +61,17 @@ class Oscillator {
   play(semitone) {
     this.stop(semitone);
 
-    let osc    = voiceComponents.createOscillator(semitone, this.detune, this.waveform),
-        gain   = voiceComponents.createGain(this.gain),
-        filter = voiceComponents.createFilter('lowpass', this.cutoff);
+    const osc    = voice.createOscillator(semitone, this.detune, this.waveform),
+          gain   = voice.createGain(this.gain),
+          filter = voice.createFilter('lowpass', this.cutoff);
 
     osc.connect(filter);
     this.envelope.run(gain);
     filter.connect(gain);
 
-    if (this.running)
+    if (this.running) {
       gain.connect(this.output);
+    }
 
     this.oscillators.push(osc);
     this.filters.push(filter);
@@ -95,7 +96,7 @@ class Oscillator {
         osc.isUsed = true;
         filter.isUsed = true;
         gain.isUsed = true;
-        this.clean()
+        this.clean();
       };
 
       this.envelope.releaseNow(gain, fn);

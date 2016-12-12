@@ -22,12 +22,10 @@ class Quad {
   }
 
   addListener(button) {
-    let self = this;
-
-    button.addEventListener('click', function(event) {
-      self.clear();
-      this.classList.add('pressed');
-      self.value = this.id;
+    button.addEventListener('click', (event) => {
+      this.clear();
+      button.classList.add('pressed');
+      this.value = button.id;
     });
   }
 

@@ -1,12 +1,12 @@
 'use strict';
 
-const OscillatorUnit = require('./oscillator-unit'),
-      EnvelopeUnit   = require('./envelope-unit'),
-      Quad           = require('./quad'),
-      Tube           = require('./tube'),
-      Knob           = require('./knob'),
-      MAX_AMP_GAIN   = 0.15,
-      MAX_OSC_GAIN   = 0.5;
+const OscillatorUnit  = require('./oscillator-unit'),
+      EnvelopeUnit    = require('./envelope-unit'),
+      Quad            = require('./quad'),
+      Tube            = require('./tube'),
+      Knob            = require('./knob'),
+      MAX_MASTER_GAIN = 0.15,
+      MAX_OSC_GAIN    = 0.5;
 
 const headings    = document.querySelectorAll('.oscillator .main h1'),
       quads       = document.getElementsByClassName('quadbutton'),
@@ -16,18 +16,17 @@ const headings    = document.querySelectorAll('.oscillator .main h1'),
       ampKnobs    = document.querySelector('.amp .knobs'),
       matrixKnobs = document.querySelectorAll('.matrix .knob');
 
-const nOscillators    = 6,
-      oscillatorUnits = [];
+const attack     = new Knob(ampKnobs.children[2], 0, 's', 0, 20),
+      decay      = new Knob(ampKnobs.children[3], 20, 's', 0, 20),
+      sustain    = new Knob(ampKnobs.children[6], 1, '%', 0, 1),
+      release    = new Knob(ampKnobs.children[7], 0.1, 's', 0, 10),
+      envelope   = new EnvelopeUnit(attack, decay, sustain, release),
+      masterGain = new Tube(tubes[0], 0.8 * MAX_MASTER_GAIN, '%', 0, MAX_MASTER_GAIN);
 
-const attack   = new Knob(ampKnobs.children[2], 0, 's', 0, 20),
-      decay    = new Knob(ampKnobs.children[3], 20, 's', 0, 20),
-      sustain  = new Knob(ampKnobs.children[6], 1, '%', 0, 1),
-      release  = new Knob(ampKnobs.children[7], 0.1, 's', 0, 10),
-      envelope = new EnvelopeUnit(attack, decay, sustain, release);
-
-const masterGain = new Tube(tubes[0], 0.8 * MAX_AMP_GAIN, '%', 0, MAX_AMP_GAIN);
-
-const matrix = [];
+const RUNNING_OSCILLATORS_ON_STARTUP = 4,
+      nOscillators = 6,
+      oscillatorUnits = [],
+      matrix = [];
 
 const initializeHeadings = () => {
   for (let i = 0; i < headings.length; i++) {
@@ -38,7 +37,7 @@ const initializeHeadings = () => {
 
 const initializeMatrix = () => {
   for (let i = 0; i < Math.pow(nOscillators, 2); i++) {
-    let knob = new Knob(matrixKnobs[i], 0, '%', 0, 1);
+    const knob = new Knob(matrixKnobs[i], 0, '%', 0, 1);
     knob.initialize();
     matrix.push(knob);
   }
@@ -46,18 +45,18 @@ const initializeMatrix = () => {
 
 const initializeOscillators = () => {
   for (let i = 0; i < nOscillators; i++) {
-    let waveform = new Quad(quads[i], 'sine'),
-        detune   = new Knob(knobs[i * 3], 0, 'cents', 0, 1200, true),
-        cutoff   = new Knob(knobs[i * 3 + 1], 8000, 'Hz', 0, 10000),
-        gain     = new Knob(knobs[i * 3 + 2], 0.5 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
-        attack   = new Knob(verticals[i].children[1], 0, 's', 0, 20),
-        decay    = new Knob(verticals[i].children[3], 20, 's', 0, 20),
-        sustain  = new Knob(verticals[i].children[5], 1, '%', 0, 1),
-        release  = new Knob(verticals[i].children[7], 0, 's', 0, 10),
-        envUnit  = new EnvelopeUnit(attack, decay, sustain, release),
-        osc      = new OscillatorUnit(waveform, detune, cutoff, gain, envUnit);
+    const waveform = new Quad(quads[i], 'sine'),
+          detune   = new Knob(knobs[i * 3], 0, 'cents', 0, 1200, true),
+          cutoff   = new Knob(knobs[i * 3 + 1], 8000, 'Hz', 0, 10000),
+          gain     = new Knob(knobs[i * 3 + 2], 0.5 * MAX_OSC_GAIN, '%', 0, MAX_OSC_GAIN),
+          attack   = new Knob(verticals[i].children[1], 0, 's', 0, 20),
+          decay    = new Knob(verticals[i].children[3], 20, 's', 0, 20),
+          sustain  = new Knob(verticals[i].children[5], 1, '%', 0, 1),
+          release  = new Knob(verticals[i].children[7], 0, 's', 0, 10),
+          envUnit  = new EnvelopeUnit(attack, decay, sustain, release),
+          osc      = new OscillatorUnit(waveform, detune, cutoff, gain, envUnit);
 
-    if (i > 3) {
+    if (i > RUNNING_OSCILLATORS_ON_STARTUP - 1) {
       osc.running = false;
     }
 
