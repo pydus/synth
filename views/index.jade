@@ -77,6 +77,17 @@ block content
         +oscillator-knobs
       +vertical
 
+  mixin matrix
+    .matrix
+      h1 FM
+      .knobs
+        - for (var y = 0; y < 6; y++) {
+        -   for (var x = 0; x < 6; x++) {
+              +knob
+        -   }
+            br
+        - }
+
   .wrapper
     .synth
       .panel
@@ -115,19 +126,11 @@ block content
             h2 Release
             +knob
             +knob
-        .matrix
-          h1 FM
-          .knobs
-            - for (var y = 0; y < 6; y++) {
-            -   for (var x = 0; x < 6; x++) {
-                  +knob
-            -   }
-                br
-            - }
         .info
       .keys
         +octave(2)
         +octave(3)
         +octave(4)
         +octave(5)
-        +octave(6, 1)
+        +octave(6)
+        +octave(7, 1)

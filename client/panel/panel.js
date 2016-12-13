@@ -71,7 +71,7 @@ const initialize = () => {
   envelope.initialize();
   masterGain.initialize();
   initializeHeadings();
-  initializeMatrix();
+  //initializeMatrix();
 };
 
 const panel = {
