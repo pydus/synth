@@ -15,13 +15,6 @@ const oscillators = [],
       gainNode    = context.createGain(),
       compressor  = context.createDynamicsCompressor();
 
-const ampEnvelope = new Envelope(
-  panel.envelope.attack.value,
-  panel.envelope.decay.value,
-  panel.envelope.sustain.value,
-  panel.envelope.release.value
-);
-
 compressor.threshold.value = -30;
 compressor.knee.value = 40;
 compressor.ratio.value = 12;
@@ -37,14 +30,14 @@ panel.gain.watch(value => gainNode.gain.value = value);
 for (let i = 0; i < panel.nOscillators; i++) {
   const oscUnit = panel[`osc${i + 1}`];
 
-  const envelope = new Envelope(
+  const envelope = Envelope(
     oscUnit.envelope.attack.value,
     oscUnit.envelope.decay.value,
     oscUnit.envelope.sustain.value,
     oscUnit.envelope.release.value
   );
 
-  const osc = new Oscillator(
+  const osc = Oscillator(
     oscUnit.waveform.value,
     oscUnit.cutoff.value,
     oscUnit.gain.value,

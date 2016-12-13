@@ -1,54 +1,57 @@
 'use strict';
 
-class Quad {
-  constructor(element, value) {
-    this.element = element;
-    this.value = value;
-    this.size = 4;
-  }
+const Quad = (element, value) => {
+  let _element = element,
+      _value   = value,
+      _size    = 4,
+      _watcher = undefined;
 
-  initialize() {
+  const initialize = () => {
     let button;
 
-    for (let i = 0; i < this.size; i++) {
-      button = this.element.children[i];
+    for (let i = 0; i < _size; i++) {
+      button = _element.children[i];
 
-      if (button.id === this.value) {
+      if (button.id === _value) {
         button.classList.add('pressed');
       }
 
-      this.addListener(button);
+      addListener(button);
     }
-  }
+  };
 
-  addListener(button) {
+  const addListener = (button) => {
     button.addEventListener('click', (event) => {
-      this.clear();
+      clear();
       button.classList.add('pressed');
-      this.value = button.id;
+      setValue(button.id);
     });
-  }
+  };
 
-  watch(fn) {
-    this.watcher = fn;
-  }
+  const watch = (fn) => {
+    _watcher = fn;
+  };
 
-  get value() {
-    return this._value;
-  }
-
-  set value(value) {
-    this._value = value;
-    if (typeof this.watcher === 'function') {
-      this.watcher(value);
+  const setValue = (value) => {
+    _value = value;
+    if (typeof _watcher === 'function') {
+      _watcher(value);
     }
-  }
+  };
 
-  clear() {
-    for (let i = 0; i < this.size; i++) {
-      this.element.children[i].classList.remove('pressed');
+  const clear = () => {
+    for (let i = 0; i < _size; i++) {
+      _element.children[i].classList.remove('pressed');
     }
-  }
-}
+  };
+
+  return {
+    initialize: initialize,
+    get element() { return _element; },
+    get value() { return _value; },
+    set value(value) { setValue(value); },
+    watch: watch
+  };
+};
 
 module.exports = Quad;

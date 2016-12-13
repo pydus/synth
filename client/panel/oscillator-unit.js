@@ -2,33 +2,39 @@
 
 const Unit = require('./unit');
 
-class OscillatorUnit extends Unit {
-  constructor(waveform, detune, cutoff, gain, envelopeUnit) {
-    super();
-    this.waveform = waveform;
-    this.detune = detune;
-    this.cutoff = cutoff;
-    this.gain = gain;
-    this.envelope = envelopeUnit;
-    this.running = true;
-    this.runningWatchers = [];
-  }
+const OscillatorUnit = (waveform, detune, cutoff, gain, envelopeUnit) => {
+  const oscillatorUnit = Unit();
 
-  initialize() {
-    this.waveform.initialize();
-    this.detune.initialize();
-    this.cutoff.initialize();
-    this.gain.initialize();
-    this.envelope.initialize();
-  }
+  const _waveform         = waveform,
+        _detune           = detune,
+        _cutoff           = cutoff,
+        _gain             = gain,
+        _envelope         = envelopeUnit,
+        _runningWatchers  = [];
 
-  updateVisuals() {
-    if (!this.running) {
-      this.waveform.element.parentNode.parentNode.classList.add('off');
+  oscillatorUnit.initialize = () => {
+    _waveform.initialize();
+    _detune.initialize();
+    _cutoff.initialize();
+    _gain.initialize();
+    _envelope.initialize();
+  };
+
+  oscillatorUnit.updateVisuals = () => {
+    if (!oscillatorUnit.running) {
+      _waveform.element.parentNode.parentNode.classList.add('off');
     } else {
-      this.waveform.element.parentNode.parentNode.classList.remove('off');
+      _waveform.element.parentNode.parentNode.classList.remove('off');
     }
-  }
-}
+  };
+
+  return Object.assign(oscillatorUnit, {
+    get waveform() { return _waveform; },
+    get detune() { return _detune; },
+    get cutoff() { return _cutoff; },
+    get gain() { return _gain; },
+    get envelope() { return _envelope; }
+  });
+};
 
 module.exports = OscillatorUnit;

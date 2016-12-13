@@ -1,173 +1,124 @@
 'use strict';
 
-const info = document.querySelector('.panel .info');
+const follow = require('./follow');
+const info = require('./info');
 
-let following;
-let hovering = false;
+/**
+ * Creates an object with a value that can be set within a range, and is controlled by a DOM element.
+ * @param  {Element} element    The DOM element that will control the value.
+ * @param  {Number} value       Initial value.
+ * @param  {String} unit        Unit of value. If set to '%', the percentage will be shown in the
+ *                              info box instead of the value.
+ * @param  {Number} min         Value when the DOM visuals are set to zero.
+ * @param  {Number} max         Maximum value.
+ * @param  {Boolean} negative   If true, the range can be controlled past min to negative max.
+ *                              If false, the min parameter controls the minimum value.
+ * @param  {Number} distance    The distance in pixels the mouse pointer has to travel vertically
+ *                              when clicking and dragging in order to go through the whole range.
+ *                              If not set, click and drag is disabled.
+ * @return {undefined}
+ */
+const Range = (element, value, unit, min, max, negative, distance) => {
+  let _element  = element,
+      _min      = min || 0,
+      _max      = max || 1,
+      _default  = value || _min,
+      _value    = _default,
+      _unit     = unit,
+      _negative = negative,
+      _distance = distance,
+      _step     = max > 100 ? 1 : 0.01,
+      _watcher  = undefined;
 
-class Range {
-  /**
-   * Creates an object with a value that can be set within a range, and is controlled by a DOM element.
-   * @param  {Element} element    The DOM element that will control the value.
-   * @param  {Number} value       Initial value.
-   * @param  {String} unit        Unit of value. If set to '%', the percentage will be shown in the
-   *                              info box instead of the value.
-   * @param  {Number} min         Value when the DOM visuals are set to zero.
-   * @param  {Number} max         Maximum value.
-   * @param  {Boolean} negative   If true, the range can be controlled past min to negative max.
-   *                              If false, the min parameter controls the minimum value.
-   * @param  {Number} distance    The distance in pixels the mouse pointer has to travel vertically
-   *                              when clicking and dragging in order to go through the whole range.
-   *                              If not set, click and drag is disabled.
-   * @return {undefined}
-   */
-  constructor(element, value, unit, min, max, negative, distance) {
-    this.element = element;
-    this.min = min || 0;
-    this.max = max || 1;
-    this.default = value || this.min;
-    this.value = this.default;
-    Range.hideInfo();
-    this.unit = unit;
-    this.negative = negative;
-    this.distance = distance;
-    this.step = 0.01;
-  }
+  const reset = () => {
+    setValue(_default);
+  };
 
-  reset() {
-    this.value = this.default;
-  }
-
-  initialize() {
-    this.element.addEventListener('mousedown', (event) => {
+  const initialize = () => {
+    _element.addEventListener('mousedown', (event) => {
       if (event.altKey) {
-        this.reset();
+        reset();
       } else {
-        this.clientY = event.clientY;
-        this.startRatio = this.ratio;
-        Range.follow(this);
-        Range.followEvent(event);
+        range.clientY = event.clientY;
+        range.startRatio = getRatio();
+        follow.follow(range, event);
       }
     });
 
-    this.addListeners();
-  }
+    addListeners();
+    setValue(_default);
+    info.hide();
+  };
 
-  addListeners() {
-    this.element.addEventListener('wheel', (event) => {
-      this.value = this.value - this.step * event.deltaY / Math.abs(event.deltaY);
+  const addListeners = () => {
+    _element.addEventListener('wheel', (event) => {
+      setValue(_value - _step * event.deltaY / Math.abs(event.deltaY));
     });
 
-    this.element.addEventListener('dblclick', (event) => {
-      this.reset();
+    _element.addEventListener('dblclick', (event) => {
+      reset();
     });
 
-    this.element.addEventListener('mouseover', (event) => {
-      this.updateInfo();
-      hovering = true;
+    _element.addEventListener('mouseover', (event) => {
+      updateInfo();
+      follow.hovering = true;
     });
 
-    this.element.addEventListener('mouseout', (event) => {
-      Range.hideInfo();
-      hovering = false;
+    _element.addEventListener('mouseout', (event) => {
+      info.hide();
+      follow.hovering = false;
     });
-  }
+  };
 
-  get value() {
-    return this._value;
-  }
+  const setValue = (value) => {
+    _value = value;
 
-  set value(value) {
-    this._value = value;
-
-    if (this.value < this.min && !this.negative) {
-      this.value = this.min;
-    } else if (this.value > this.max) {
-      this.value = this.max;
-    } else if (this.value < -this.max) {
-      this.value = -this.max;
+    if (_value < _min && !_negative) {
+      _value = _min;
+    } else if (_value > _max) {
+      _value = _max;
+    } else if (_value < -_max) {
+      _value = -_max;
     }
 
-    if (typeof this.watcher === 'function') {
-      this.watcher(this.value);
+    if (typeof _watcher === 'function') {
+      _watcher(_value);
     }
 
-    this.updateVisuals(this.ratio);
-    this.updateInfo();
-  }
+    range.updateVisuals(getRatio());
+    updateInfo();
+  };
 
-  updateInfo() {
+  const updateInfo = () => {
     let text;
 
-    if (this.unit === '%') {
-      text = `${(100 * this.value / this.max).toFixed(2)}%`;
+    if (_unit === '%') {
+      text = `${(100 * _value / _max).toFixed(2)}%`;
     } else {
-      text = `${this.value.toFixed(2)} ${this.unit}`;
+      text = `${_value.toFixed(2)} ${_unit}`;
     }
 
-    Range.showInfo(text);
-  }
+    info.show(text);
+  };
 
-  updateVisuals(ratio) { }
+  const watch = fn => _watcher = fn;
 
-  watch(fn) {
-    this.watcher = fn;
-  }
+  const getRatio = () => (_value - _min) / (_max - _min);
 
-  get ratio() {
-    return (this.value - this.min) / (this.max - this.min);
-  }
+  const range =  {
+    initialize: initialize,
+    watch: watch,
+    get value() { return _value; },
+    set value(value) { setValue(value); },
+    get element() { return _element; },
+    get distance() { return _distance; },
+    get max() { return _max; },
+    get min() { return _min; },
+    get negative() { return _negative; },
+    updateVisuals: ratio => {}
+  };
 
-  static showInfo(text) {
-    info.innerHTML = text;
-    info.style.visibility = 'visible';
-    info.style.opacity = 1;
-  }
-
-  static hideInfo() {
-    info.style.visibility = 'hidden';
-    info.style.opacity = 0;
-  }
-
-  static followEvent(event) {
-    const rect     = following.element.getBoundingClientRect(),
-          distance = following.distance || rect.height,
-          dy       = event.clientY - following.clientY;
-
-    let ratio;
-
-    if (!following.distance) {
-      ratio = (rect.top - (event.clientY - rect.height)) / rect.height;
-    } else {
-      ratio = following.startRatio - dy / distance;
-    }
-
-    if (ratio < 0 && !following.negative) {
-      ratio = 0;
-    } else if (ratio > 1) {
-      ratio = 1;
-    } else if (ratio < -1) {
-      ratio = -1;
-    }
-
-    const value = ratio * (following.max - following.min) + following.min;
-
-    following.value = value;
-  }
-
-  static follow(range) {
-    following = range;
-    document.addEventListener('mousemove', Range.followEvent);
-  }
-
-  static unfollow() {
-    document.removeEventListener('mousemove', Range.followEvent);
-    if (!hovering) {
-      Range.hideInfo();
-    }
-  }
-}
-
-document.addEventListener('mouseup', Range.unfollow);
+  return range;
+};
 
 module.exports = Range;

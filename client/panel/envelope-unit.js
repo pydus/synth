@@ -2,21 +2,27 @@
 
 const Unit = require('./unit');
 
-class EnvelopeUnit extends Unit {
-  constructor(attack, decay, sustain, release) {
-    super();
-    this.attack = attack;
-    this.decay = decay;
-    this.sustain = sustain;
-    this.release = release;
-  }
+const EnvelopeUnit = (attack, decay, sustain, release) => {
+  const envelopeUnit = Unit();
 
-  initialize() {
-    this.attack.initialize();
-    this.decay.initialize();
-    this.sustain.initialize();
-    this.release.initialize();
-  }
-}
+  const _attack  = attack,
+        _decay   = decay,
+        _sustain = sustain,
+        _release = release;
+
+  envelopeUnit.initialize = () => {
+    _attack.initialize();
+    _decay.initialize();
+    _sustain.initialize();
+    _release.initialize();
+  };
+
+  return Object.assign(envelopeUnit, {
+    get attack() { return _attack; },
+    get decay() { return _decay; },
+    get sustain() { return _sustain; },
+    get release() { return _release; }
+  });
+};
 
 module.exports = EnvelopeUnit;

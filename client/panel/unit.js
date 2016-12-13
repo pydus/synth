@@ -1,32 +1,33 @@
 'use strict';
 
-class Unit {
-  constructor() {
-    this._running = true;
-    this.runningWatchers = [];
-  }
+const Unit = () => {
+  let _running = true;
+  const _runningWatchers = [];
 
-  initialize() { }
+  const watchRunning = (fn) => {
+    _runningWatchers.push(fn);
+  };
 
-  watchRunning(fn) {
-    this.runningWatchers.push(fn);
-  }
+  const setRunning = (value) => {
+    _running = value;
+    _runningWatchers.forEach(watcher => watcher(value));
+    unit.updateVisuals();
+  };
 
-  toggleRunning() {
-    this.running = !this.running;
-  }
+  const toggleRunning = () => {
+    setRunning(!_running);
+  };
 
-  get running() {
-    return this._running;
-  }
+  const unit = {
+    initialize: () => {},
+    updateVisuals: () => {},
+    get running() { return _running; },
+    set running(value) { setRunning(value); },
+    watchRunning: watchRunning,
+    toggleRunning: toggleRunning
+  };
 
-  set running(value) {
-    this._running = value;
-    this.runningWatchers.forEach(watcher => watcher(value));
-    this.updateVisuals();
-  }
-
-  updateVisuals() { }
-}
+  return unit;
+};
 
 module.exports = Unit;

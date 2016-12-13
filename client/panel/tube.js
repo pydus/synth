@@ -2,14 +2,14 @@
 
 const Range = require('./range');
 
-class Tube extends Range {
-  constructor(element, value, unit, min, max) {
-    super(element, value, unit, min, max, false);
-  }
+const Tube = (element, value, unit, min, max) => {
+  const tube = Range(element, value, unit, min, max, false);
 
-  updateVisuals(ratio) {
-    this.element.children[0].style.transform = `translate(0, -${ratio * 100}%)`;
-  }
-}
+  tube.updateVisuals = (ratio) => {
+    element.children[0].style.transform = `translate(0, -${ratio * 100}%)`;
+  };
+
+  return tube;
+};
 
 module.exports = Tube;

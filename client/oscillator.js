@@ -2,91 +2,47 @@
 
 const voice = require('./voice');
 
-class Oscillator {
-  constructor(waveform, cutoff, gain, envelope) {
-    this.oscillators = [];
-    this.gains = [];
-    this.filters = [];
-    this.waveform = waveform;
-    this.cutoff = cutoff;
-    this.gain = gain || 0.3;
-    this.detune = 0;
-    this.envelope = envelope;
-    this.running = true;
-  }
+const Oscillator = (waveform, cutoff, gain, envelope) => {
+  let _oscillators = [],
+      _gains       = [],
+      _filters     = [],
+      _waveform    = waveform,
+      _cutoff      = cutoff,
+      _gain        = gain || 0.3,
+      _envelope    = envelope,
+      _detune      = 0,
+      _running     = true,
+      _output      = undefined;
 
-  get running() { return this._running; }
-  get waveform() { return this._waveform; }
-  get detune() { return this._detune; }
-  get cutoff() { return this._cutoff; }
-  get gain() { return this._gain; }
+  const play = (semitone) => {
+    stop(semitone);
 
-  set running(value) {
-    this._running = value;
-    if (value) {
-      this.unMute();
-    } else {
-      this.mute();
-    }
-  }
-
-  set waveform(waveform) {
-    this._waveform = waveform;
-    this.oscillators.forEach(osc => osc.type = waveform);
-  }
-
-  set detune(value) {
-    this._detune = value;
-    this.oscillators.forEach(osc => osc.detune.value = value);
-  }
-
-  set cutoff(value) {
-    this._cutoff = value;
-    this.filters.forEach(filter => filter.frequency.value = value);
-  }
-
-  set gain(value) {
-    this._gain = value;
-    this.addGains();
-  }
-
-  addGains() {
-    this.gains.forEach(gainNode => gainNode.gain.value = this.gain);
-  }
-
-  connect(output) {
-    this.output = output;
-  }
-
-  play(semitone) {
-    this.stop(semitone);
-
-    const osc    = voice.createOscillator(semitone, this.detune, this.waveform),
-          gain   = voice.createGain(this.gain),
-          filter = voice.createFilter('lowpass', this.cutoff);
+    const osc    = voice.createOscillator(semitone, _detune, _waveform),
+          gain   = voice.createGain(_gain),
+          filter = voice.createFilter('lowpass', _cutoff);
 
     osc.connect(filter);
-    this.envelope.run(gain);
+    _envelope.run(gain);
     filter.connect(gain);
 
-    if (this.running) {
-      gain.connect(this.output);
+    if (_running) {
+      gain.connect(_output);
     }
 
-    this.oscillators.push(osc);
-    this.filters.push(filter);
-    this.gains.push(gain);
-  }
+    _oscillators.push(osc);
+    _filters.push(filter);
+    _gains.push(gain);
+  };
 
-  stop(semitone) {
-    for (let i = 0; i < this.oscillators.length; i++) {
-      if (this.oscillators[i].semitone !== semitone) {
+  const stop = (semitone) => {
+    for (let i = 0; i < _oscillators.length; i++) {
+      if (_oscillators[i].semitone !== semitone) {
         continue;
       }
 
-      const osc    = this.oscillators[i],
-            filter = this.filters[i],
-            gain   = this.gains[i];
+      const osc    = _oscillators[i],
+            filter = _filters[i],
+            gain   = _gains[i];
 
       const fn = () => {
         osc.stop();
@@ -96,26 +52,81 @@ class Oscillator {
         osc.isUsed = true;
         filter.isUsed = true;
         gain.isUsed = true;
-        this.clean();
+        clean();
       };
 
-      this.envelope.releaseNow(gain, fn);
+      _envelope.releaseNow(gain, fn);
     }
-  }
+  };
 
-  clean() {
-    this.oscillators = this.oscillators.filter(osc => !osc.isUsed);
-    this.filters = this.filters.filter(fil => !fil.isUsed);
-    this.gains = this.gains.filter(gain => !gain.isUsed);
-  }
+  const addGains = () => {
+    _gains.forEach(gainNode => gainNode.gain.value = gain);
+  };
 
-  unMute() {
-    this.gains.forEach(gainNode => gainNode.connect(this.output));
-  }
+  const clean = () => {
+    _oscillators = _oscillators.filter(osc => !osc.isUsed);
+    _filters = _filters.filter(fil => !fil.isUsed);
+    _gains = _gains.filter(gain => !gain.isUsed);
+  };
 
-  mute() {
-    this.gains.forEach(gainNode => gainNode.disconnect());
-  }
-}
+  const unMute = () => {
+    _gains.forEach(gainNode => gainNode.connect(_output));
+  };
+
+  const mute = () => {
+    _gains.forEach(gainNode => gainNode.disconnect());
+  };
+
+  const setRunning = (value) => {
+    _running = value;
+    if (value) {
+      unMute();
+    } else {
+      mute();
+    }
+  };
+
+  const setWaveform = (waveform) => {
+    _waveform = waveform;
+    _oscillators.forEach(osc => osc.type = _waveform);
+  };
+
+  const setDetune = (value) => {
+    _detune = value;
+    _oscillators.forEach(osc => osc.detune.value = value);
+  };
+
+  const setCutoff = (value) => {
+    _cutoff = value;
+    _filters.forEach(filter => filter.frequency.value = value);
+  };
+
+  const setGain = (value) => {
+    _gain = value;
+    addGains();
+  };
+
+  const connect = (output) => {
+    _output = output;
+  };
+
+  return {
+    connect: connect,
+    play: play,
+    stop: stop,
+
+    get running() { return _running; },
+    get waveform() { return _waveform; },
+    get detune() { return _detune; },
+    get cutoff() { return _cutoff; },
+    get gain() { return _gain; },
+
+    set running(value) { setRunning(value); },
+    set waveform(value) { setWaveform(value); },
+    set detune(value) { setDetune(value); },
+    set cutoff(value) { setCutoff(value); },
+    set gain(value) { setGain(value); }
+  };
+};
 
 module.exports = Oscillator;
